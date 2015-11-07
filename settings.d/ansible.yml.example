@@ -1,0 +1,3 @@
+---
+:enabled: true
+:ansible_working_dir: '~/.foreman-ansible'
