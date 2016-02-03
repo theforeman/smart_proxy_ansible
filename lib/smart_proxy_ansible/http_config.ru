@@ -1,4 +1,5 @@
-# This plugin just adds new Dynflow actions to be triggered from the Foreman
-# map "/ssh" do
-#   run Proxy::RemoteExecution::Ssh::Api
-# end
+require 'smart_proxy_ansible/api'
+
+map "/ansible" do
+  run Proxy::Ansible::Api
+end

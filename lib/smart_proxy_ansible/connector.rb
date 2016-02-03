@@ -42,7 +42,7 @@ module Proxy::Ansible
         end
       end
       session.process(0) until started
-      return true
+      true
     end
 
     def run(command)
@@ -138,7 +138,7 @@ module Proxy::Ansible
       # verify it, otherwise, if missing, import it and continue
       ssh_options[:paranoid] = true
       ssh_options[:auth_methods] = ["publickey"]
-      return ssh_options
+      ssh_options
     end
   end
 end
