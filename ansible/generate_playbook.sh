@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ANSIBLE_OPTIONS=""
+RUN=0
 
 function die() {
     echo "ERROR: $1" >&2
@@ -40,8 +41,6 @@ function generate_playbook() {
 function run_playbook() {
     ansible-playbook $ANSIBLE_OPTIONS "$1"
 }
-
-RUN=0
 
 while getopts Ro: opt; do
     case $opt in

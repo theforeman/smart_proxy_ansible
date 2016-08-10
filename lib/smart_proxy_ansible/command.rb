@@ -115,7 +115,7 @@ module Proxy::Ansible
         end
 
         def poll_intervals
-          [1, 2, 5, 15, 30, 60]
+          [10, 20, 30]
         end
 
         private
@@ -123,7 +123,6 @@ module Proxy::Ansible
         def inventory(input)
           input['inventory'].map do |fqdn, roles|
             role_string = roles.map { |role| "'#{role}'" }.join(',')
-            puts role_string
             "#{fqdn} foreman_roles=[#{role_string}]"
           end.join("\n")
         end
@@ -167,81 +166,81 @@ module Proxy::Ansible
         end
       end
 
-      class Action < ::Dynflow::Action
-        include Dynflow::Action::Cancellable
-        include ::SmartProxyDynflowCore::Callback::PlanHelper
+      # class Action < ::Dynflow::Action
+      #   include Dynflow::Action::Cancellable
+      #   include ::SmartProxyDynflowCore::Callback::PlanHelper
 
-        def plan(input)
-          if callback = input['callback']
-            input[:task_id] = callback['task_id']
-          else
-            input[:task_id] ||= SecureRandom.uuid
-          end
-          plan_with_callback(input)
-        end
+      #   def plan(input)
+      #     if callback = input['callback']
+      #       input[:task_id] = callback['task_id']
+      #     else
+      #       input[:task_id] ||= SecureRandom.uuid
+      #     end
+      #     plan_with_callback(input)
+      #   end
 
-        def run(event = nil)
-          case event
-            when nil
-              init_run
-            when Update
-              process_update(event)
-            when Dynflow::Action::Cancellable::Cancel
-              kill_run
-            when Dynflow::Action::Skip
-              # do nothing
-            else
-              raise "Unexpected event #{event.inspect}"
-          end
-        rescue => e
-          action_logger.error(e)
-          process_update(Update.new(Update.encode_exception("Proxy error", e)))
-        end
+      #   def run(event = nil)
+      #     case event
+      #       when nil
+      #         init_run
+      #       when Update
+      #         process_update(event)
+      #       when Dynflow::Action::Cancellable::Cancel
+      #         kill_run
+      #       when Dynflow::Action::Skip
+      #         # do nothing
+      #       else
+      #         raise "Unexpected event #{event.inspect}"
+      #     end
+      #   rescue => e
+      #     action_logger.error(e)
+      #     process_update(Update.new(Update.encode_exception("Proxy error", e)))
+      #   end
 
-        def finalize
-          # To mark the task as a whole as failed
-          error! "Script execution failed" if failed_run?
-        end
+      #   def finalize
+      #     # To mark the task as a whole as failed
+      #     error! "Script execution failed" if failed_run?
+      #   end
 
-        def rescue_strategy_for_self
-          Dynflow::Action::Rescue::Skip
-        end
+      #   def rescue_strategy_for_self
+      #     Dynflow::Action::Rescue::Skip
+      #   end
 
-        def request
-          @request ||= Request.new(:id => input[:task_id],
-                                   :inventory => input[:inventory],
-                                   :playbook => input[:playbook],
-                                   :suspended_action => suspended_action)
-        end
+      #   def request
+      #     @request ||= Request.new(:id => input[:task_id],
+      #                              :inventory => input[:inventory],
+      #                              :playbook => input[:playbook],
+      #                              :suspended_action => suspended_action)
+      #   end
 
-        def init_run
-          output[:result] = []
-          Proxy::Ansible.dispatcher.tell([:initialize_command, request])
-          suspend
-        end
+      #   def init_run
+      #     output[:result] = []
+      #     Proxy::Ansible.dispatcher.tell([:initialize_command, request])
+      #     suspend
+      #   end
 
-        def kill_run
-          Proxy::Ansible.dispatcher.tell([:kill, request])
-          suspend
-        end
+      #   def kill_run
+      #     Proxy::Ansible.dispatcher.tell([:kill, request])
+      #     suspend
+      #   end
 
-        def finish_run(update)
-          output[:exit_status] = update.exit_status
-        end
+      #   def finish_run(update)
+      #     output[:exit_status] = update.exit_status
+      #   end
 
-        def process_update(update)
-          output[:result].concat(update.buffer_to_hash)
-          if update.exit_status
-            finish_run(update)
-          else
-            suspend
-          end
-        end
+      #   def process_update(update)
+      #     output[:result].concat(update.buffer_to_hash)
+      #     if update.exit_status
+      #       finish_run(update)
+      #     else
+      #       suspend
+      #     end
+      #   end
 
-        def failed_run?
-          output[:exit_status] != 0
-        end
-      end
+      #   def failed_run?
+      #     output[:exit_status] != 0
+      #   end
+      # end
     end
   end
 end
