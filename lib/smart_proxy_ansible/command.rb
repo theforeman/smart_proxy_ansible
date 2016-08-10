@@ -72,6 +72,78 @@ module Proxy::Ansible
     end
 
     module Playbook
+      class Action < ::Dynflow::Action
+
+        include ::Dynflow::Action::Polling
+        include ::Dynflow::Action::Cancellable
+        include ::SmartProxyDynflowCore::Callback::PlanHelper
+
+        def plan(input)
+          if callback = input['callback']
+            input[:task_id] = callback['task_id']
+          else
+            input[:task_id] ||= SecureRandom.uuid
+          end
+          File.write(path_for('inventory'), inventory(input))
+          plan_with_callback(input)
+        end
+
+        def cancel!
+          Process.kill(15, output[:pid])
+        end
+
+        def done?
+          !output[:exit_code].nil?
+        end
+
+        def invoke_external_task
+          spawn("generate_playbook.sh -R -o '-i #{path_for('inventory')}' #{path_for('play.yml')}",
+                :out => path_for('stdout.log'), :err => path_for('stderr.log'))
+        end
+
+        def poll_external_task
+          if Process.wait(output[:task], Process::WNOHANG)
+            output[:exit_code] = $?.exitstatus
+          end
+          output[:task]
+        end
+
+        def on_finish
+          output[:stdout] = File.readlines(path_for('stdout.log')).map(&:rstrip).select { |line| !line.empty? }
+          output[:stderr] = File.readlines(path_for('stderr.log')).map(&:rstrip).select { |line| !line.empty? }
+          cleanup
+        end
+
+        def poll_intervals
+          [1, 2, 5, 15, 30, 60]
+        end
+
+        private
+
+        def inventory(input)
+          input['inventory'].map do |fqdn, roles|
+            role_string = roles.map { |role| "'#{role}'" }.join(',')
+            puts role_string
+            "#{fqdn} foreman_roles=[#{role_string}]"
+          end.join("\n")
+        end
+
+        def path_for(thing)
+          File.join(prefix, thing)
+        end
+
+        def cleanup
+          Dir["#{input[:prefix]}/*"].each do |file|
+            File.unlink(file)
+          end
+          Dir.unlink(input[:prefix])
+        end
+
+        def prefix
+          input[:prefix] ||= Dir.mktmpdir('foreman_ansible')
+        end
+      end
+
       class Request
         attr_reader :id, :inventory, :playbook, :suspended_action
 
@@ -97,7 +169,7 @@ module Proxy::Ansible
 
       class Action < ::Dynflow::Action
         include Dynflow::Action::Cancellable
-        include ::Proxy::Dynflow::Callback::PlanHelper
+        include ::SmartProxyDynflowCore::Callback::PlanHelper
 
         def plan(input)
           if callback = input['callback']

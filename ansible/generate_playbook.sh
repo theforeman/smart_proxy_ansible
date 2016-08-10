@@ -41,6 +41,8 @@ function run_playbook() {
     ansible-playbook $ANSIBLE_OPTIONS "$1"
 }
 
+RUN=0
+
 while getopts Ro: opt; do
     case $opt in
         R)
