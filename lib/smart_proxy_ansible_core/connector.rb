@@ -1,4 +1,4 @@
-module Proxy::Ansible
+module Proxy::Ansible::Core
   class Connector
     MAX_PROCESS_RETRIES = 3
 

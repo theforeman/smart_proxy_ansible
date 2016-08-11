@@ -1,4 +1,4 @@
-module Proxy::Ansible
+module Proxy::Ansible::Core
   module Command
     class Update
       attr_reader :buffer, :exit_status
@@ -85,7 +85,7 @@ module Proxy::Ansible
 
         def plan(input)
           input[:inventory] = inventory(input)
-          plan_action ::Proxy::Ansible::Command::Playbook::Action, input
+          plan_action ::Proxy::Ansible::Core::Command::Playbook::Action, input
         end
 
         def inventory(input)

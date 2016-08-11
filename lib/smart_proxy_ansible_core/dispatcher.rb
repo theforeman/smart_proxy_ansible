@@ -1,6 +1,6 @@
-require 'smart_proxy_ansible/session'
+require 'smart_proxy_ansible_core/session'
 
-module Proxy::Ansible
+module Proxy::Ansible::Core
   # Service that handles running external commands for Actions::Command
   # Dynflow action. It runs just one (actor) thread for all the commands
   # running in the system and updates the Dynflow actions periodically.
@@ -55,7 +55,7 @@ module Proxy::Ansible
       options = { :name => "proxy-ansible-session-#{request.id}",
                   :args => [request, @session_args],
                   :supervise => true }
-      @sessions[request.id] = Proxy::Ansible::Session.spawn(options)
+      @sessions[request.id] = Proxy::Ansible::Core::Session.spawn(options)
     end
 
     def close_session(request)
@@ -66,3 +66,4 @@ module Proxy::Ansible
     end
   end
 end
+

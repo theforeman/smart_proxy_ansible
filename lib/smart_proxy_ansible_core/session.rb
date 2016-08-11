@@ -1,7 +1,7 @@
 require 'io/wait'
 require 'pty'
 
-module Proxy::Ansible
+module Proxy::Ansible::Core
   # Service that handles running external commands for Actions::Command
   # Dynflow action. It runs just one (actor) thread for all the commands
   # running in the system and updates the Dynflow actions periodically.
@@ -11,7 +11,7 @@ module Proxy::Ansible
     def initialize(request, options = {})
       @clock = options[:clock] || Dynflow::Clock.spawn('proxy-dispatcher-clock')
       @logger = options[:logger] || Logger.new($stderr)
-      @working_dir = File.expand_path(options[:working_dir] || Plugin.settings.ansible_working_dir)
+      @working_dir = File.expand_path(options[:working_dir] || Settings.instance.ansible_working_dir)
       @refresh_interval = options[:refresh_interval] || 1
       @request = request
 

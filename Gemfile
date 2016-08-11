@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gemspec
+gemspec :name => 'smart_proxy_ansible_core'
 
 group :development do
   #gem 'smart_proxy', :git => "https://github.com/theforeman/smart-proxy", :branch => "develop"
