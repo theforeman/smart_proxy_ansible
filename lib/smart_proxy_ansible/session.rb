@@ -23,7 +23,7 @@ module Proxy::Ansible
 
     def initialize_command
       write_inventory
-      write_playbook
+      write_playbook if @request.playbook
       @logger.debug("initalizing command [#{@request}]") #
       Dir.chdir(@working_dir) do
         @command_out, @command_in, @command_pid = PTY.spawn(*command)
@@ -37,7 +37,12 @@ module Proxy::Ansible
     end
 
     def command
-      command = [{ 'ANSIBLE_EVENTS_DIR' => events_dir }, "ansible-playbook"]
+      command = [{ 'ANSIBLE_EVENTS_DIR' => events_dir, 'ANSIBLE_NOCOLOR' => 'true' }]
+      if @request.playbook
+        command << "ansible-playbook"
+      else
+        command.concat(%w(generate_playbook.sh -R))
+      end
       command.concat(["-i", inventory_file]) if @request.inventory
       command << playbook_file
       command

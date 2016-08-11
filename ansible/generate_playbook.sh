@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ANSIBLE_OPTIONS=""
+ANSIBLE_INVENTORY=""
 RUN=0
 
 function die() {
@@ -28,7 +29,7 @@ function generate_roles() {
     for role in $(echo "$roles" | tr ' ' '\n' | sort | uniq); do
         cat >> "$playbook" <<-END
     - role: $role
-      when: '"$role" in foreman_roles'
+      when: '"$role" in foreman_ansible_roles'
 END
     done
 }
@@ -39,16 +40,19 @@ function generate_playbook() {
 }
 
 function run_playbook() {
-    ansible-playbook $ANSIBLE_OPTIONS "$1"
+    ansible-playbook $ANSIBLE_INVENTORY $ANSIBLE_OPTIONS "$1"
 }
 
-while getopts Ro: opt; do
+while getopts Ro:i: opt; do
     case $opt in
         R)
             RUN=1
             ;;
         o)
             ANSIBLE_OPTIONS="$OPTARG"
+            ;;
+        i)
+            ANSIBLE_INVENTORY="-i $OPTARG"
             ;;
         *)
             die "Unknown option '-$OPTARG'"

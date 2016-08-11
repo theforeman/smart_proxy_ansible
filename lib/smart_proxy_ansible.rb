@@ -5,8 +5,8 @@ module Proxy
     class << self
       def initialize
         @dispatcher = Proxy::Ansible::Dispatcher.spawn('proxy-ansible-dispatcher',
-                                                       :clock  => Proxy::Dynflow.instance.world.clock,
-                                                       :logger => Proxy::Dynflow.instance.world.logger)
+                                                       :clock  => SmartProxyDynflowCore::Core.instance.world.clock,
+                                                       :logger => SmartProxyDynflowCore::Core.instance.world.logger)
       end
 
       def dispatcher
