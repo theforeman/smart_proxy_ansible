@@ -6,10 +6,10 @@ require 'smart_proxy_ansible/version'
 Gem::Specification.new do |gem|
   gem.name          = "smart_proxy_ansible"
   gem.version       = Proxy::Ansible::VERSION
-  gem.authors       = ['Ivan Nečas']
-  gem.email         = ['inecas@redhat.com']
-  gem.homepage      = "https://github.com/iNecas/smart_proxy_ansible"
-  gem.summary       = 'Smart-Proxy ansible plugin'
+  gem.authors       = ['Ivan Nečas' , 'Daniel Lobato']
+  gem.email         = ['inecas@redhat.com', 'dlobatog@redhat.com']
+  gem.homepage      = "https://github.com/theforeman/smart_proxy_ansible"
+  gem.summary       = 'Smart-Proxy Ansible plugin'
   gem.description   = <<-EOS
     Smart-Proxy ansible plugin
   EOS

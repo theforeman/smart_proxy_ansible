@@ -1,1 +1,1 @@
-gem 'foreman_ansible_core', '~> 1.0.0'
+gem 'foreman_ansible_core', '~> 1.0'
