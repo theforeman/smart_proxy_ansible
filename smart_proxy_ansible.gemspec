@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
     Smart-Proxy ansible plugin
   EOS
 
-  gem.files            = Dir['{bundler.plugins.d,settings.d}/**/*', 'LICENSE', 'README.md',
+  gem.files            = Dir['bundler.plugins.d/smart_proxy_ansible.rb', 'settings.d/**/*', 'LICENSE', 'README.md',
                              'lib/smart_proxy_ansible.rb', 'lib/smart_proxy_ansible/**/*']
   gem.extra_rdoc_files = ['README.md', 'LICENSE']
   gem.test_files       = gem.files.grep(%r{^(test|spec|features)/})
@@ -29,5 +29,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('rack-test', '~> 0')
   gem.add_development_dependency('rubocop', '0.32.1')
   gem.add_runtime_dependency('smart_proxy_dynflow', '~> 0.1')
-  gem.add_runtime_dependency('foreman_ansible_core', '>= 2.0.2', '< 3.0')
 end
