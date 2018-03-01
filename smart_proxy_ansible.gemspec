@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   EOS
 
   gem.files            = Dir['bundler.plugins.d/smart_proxy_ansible.rb', 'settings.d/**/*', 'LICENSE', 'README.md',
+                             'lib/foreman_ansible_core.rb', 'lib/foreman_ansible_core/**/*',
                              'lib/smart_proxy_ansible.rb', 'lib/smart_proxy_ansible/**/*']
   gem.extra_rdoc_files = ['README.md', 'LICENSE']
   gem.test_files       = gem.files.grep(%r{^(test|spec|features)/})
