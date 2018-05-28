@@ -7,18 +7,27 @@ module Proxy
         ::ForemanAnsibleCore::RolesReader.list_roles.to_json
       end
 
+      get '/roles/variables' do
+        variables = {}
+        ::ForemanAnsibleCore::RolesReader.list_roles.each do |role_name|
+          variables[role_name] = extract_variables(role_name)[role_name]
+        end
+        variables.to_json
+      end
+
       get '/roles/:role_name/variables' do |role_name|
-        # not anything matching item, }}, {{, ansible_hostname or 'if'
-        ansible_config = '/etc/ansible/ansible.cfg'
-        roles_path = ::ForemanAnsibleCore::RolesReader.roles_path(ansible_config)
-        role_files = Dir.glob("#{roles_path}/#{role_name}/**/*.yml")
-        variables = role_files.map do |role_file|
-          File.read(role_file).scan(/{{(.*?)}}/).select do |param|
-            param.first.scan(/item/) == [] && param.first.scan(/if/) == []
-          end.first
-        end.compact
-        variables.uniq!
-        variables = variables.map(&:first).map(&:strip).to_json
+        extract_variables(role_name).to_json
+      end
+
+      private
+
+      def extract_variables(role_name)
+        variables = {}
+        ::ForemanAnsibleCore::RolesReader.roles_path.split(':').each do |path|
+          variables[role_name] = ::ForemanAnsibleCore::VariablesExtractor.
+            extract_variables("#{path}/#{role_name}")
+        end
+        variables
       end
     end
   end
