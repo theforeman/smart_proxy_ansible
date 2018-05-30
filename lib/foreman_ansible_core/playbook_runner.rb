@@ -54,7 +54,7 @@ module ForemanAnsibleCore
     end
 
     def inventory_file
-      File.join(@working_dir, 'foreman-inventories', id)
+      File.join(@working_dir, 'foreman-inventories', "#{id}.json")
     end
 
     def playbook_file

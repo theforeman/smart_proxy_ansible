@@ -5,23 +5,17 @@ module ForemanAnsibleCore
 
     def initialize(inventory_file, playbook_file, options = {})
       @options = options
-      @command = [{ 'JSON_INVENTORY_FILE' => inventory_file }]
-      @command << 'ansible-playbook'
-      @command = command_options(@command)
-      @command << playbook_file
+      @command = build_command('ansible-playbook', inventory_file, playbook_file)
     end
 
     private
 
-    def command_options(command)
-      command.concat(['-i', json_inventory_script])
-      command.concat([setup_verbosity]) if verbose?
+    def build_command(cmd, inventory_file, playbook_file)
+      command = [cmd, '-i', inventory_file]
+      command << setup_verbosity if verbose?
       command.concat(['-T', @options[:timeout]]) unless @options[:timeout].nil?
+      command << playbook_file
       command
-    end
-
-    def json_inventory_script
-      File.expand_path('../../bin/json_inventory.sh', File.dirname(__FILE__))
     end
 
     def setup_verbosity
