@@ -43,7 +43,7 @@ module ForemanAnsibleCore
         rescue_and_raise_file_exception ReadConfigFileException,
                                         DEFAULT_CONFIG_FILE, 'config file' do
           File.readlines(DEFAULT_CONFIG_FILE).select do |line|
-            line =~ /roles_path/
+            line =~ /^\s*roles_path/
           end
         end
       end
