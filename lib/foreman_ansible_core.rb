@@ -11,6 +11,7 @@ end
 module ForemanAnsibleCore
   require 'foreman_ansible_core/exception'
   require 'foreman_ansible_core/roles_reader'
+  require 'foreman_ansible_core/variables_extractor'
   require 'foreman_ansible_core/version'
 
   if defined? ForemanTasksCore
