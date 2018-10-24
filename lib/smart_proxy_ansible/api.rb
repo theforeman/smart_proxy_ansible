@@ -1,5 +1,8 @@
 module Proxy
   module Ansible
+    # API endpoints. Most of the code should be calling other classes,
+    # please keep the actual implementation of the endpoints outside
+    # of this class.
     class Api < Sinatra::Base
       get '/roles' do
         RolesReader.list_roles.to_json
@@ -22,8 +25,8 @@ module Proxy
       def extract_variables(role_name)
         variables = {}
         RolesReader.roles_path.split(':').each do |path|
-          variables[role_name] = VariablesExtractor.
-            extract_variables("#{path}/#{role_name}")
+          variables[role_name] = VariablesExtractor
+                                 .extract_variables("#{path}/#{role_name}")
         end
         variables
       end

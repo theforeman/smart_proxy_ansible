@@ -35,7 +35,7 @@ module Proxy
 
         def read_roles(roles_path)
           rescue_and_raise_file_exception ReadRolesException,
-            roles_path, 'roles' do
+                                          roles_path, 'roles' do
             Dir.glob("#{roles_path}/*").map do |path|
               path.split('/').last
             end
@@ -44,7 +44,7 @@ module Proxy
 
         def roles_path_from_config
           rescue_and_raise_file_exception ReadConfigFileException,
-            DEFAULT_CONFIG_FILE, 'config file' do
+                                          DEFAULT_CONFIG_FILE, 'config file' do
             File.readlines(DEFAULT_CONFIG_FILE).select do |line|
               line =~ /^\s*roles_path/
             end
@@ -57,7 +57,7 @@ module Proxy
           logger.debug(e.backtrace)
           exception_message = "Could not read Ansible #{type} "\
             "#{path} - #{e.message}"
-          raise exception.new(exception_message)
+          raise exception.new(exception_message), exception_message
         end
       end
     end

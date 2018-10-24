@@ -2,7 +2,8 @@
 
 module Proxy
   module Ansible
-    # Taken from Foreman core, this class creates an error code for any exception
+    # Taken from Foreman core, this class creates an error code for any
+    # exception
     class Exception < ::StandardError
       def initialize(message, *params)
         @message = message
