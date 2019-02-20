@@ -37,8 +37,8 @@ module Proxy
       def extract_variables(role_name)
         variables = {}
         RolesReader.roles_path.split(':').each do |path|
-          variables[role_name] = VariablesExtractor
-                                 .extract_variables("#{path}/#{role_name}")
+          variables[role_name] ||= VariablesExtractor
+                                   .extract_variables("#{path}/#{role_name}")
         end
         variables
       end
