@@ -7,8 +7,9 @@ class VariablesExtractorTest < Minitest::Test
     test 'extracts variables' do
       res = Proxy::Ansible::VariablesExtractor.extract_variables("#{Dir.getwd}/test/fixtures/roles/with_defaults")
 
+      assert_equal Hash, res.class
       assert_equal 13, res.count
-      assert_includes(res, 'postgresql_locales')
+      assert_equal "postgres", res["postgresql_user"]
     end
 
     test 'raises when fails to parse' do
