@@ -6,7 +6,7 @@ module Proxy
     class RolesReader
       class << self
         DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'.freeze
-        DEFAULT_ROLES_PATH = '/etc/ansible/roles'.freeze
+        DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'.freeze
 
         def list_roles
           roles_path.split(':').map { |path| read_roles(path) }.flatten
