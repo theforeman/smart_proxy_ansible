@@ -6,8 +6,8 @@ require_relative '../lib/smart_proxy_ansible/roles_reader'
 # Tests for the Roles Reader service of ansible core,
 # this class simply reads roles from its path in ansible.cfg
 class RolesReaderTest < Minitest::Test
-  CONFIG_PATH = '/etc/ansible/ansible.cfg'
-  ROLES_PATH = '/etc/ansible/roles'
+  CONFIG_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_CONFIG_FILE
+  ROLES_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_ROLES_PATH
 
   def self.expect_content_config(ansible_cfg_content)
     Proxy::Ansible::RolesReader.expects(:roles_path_from_config)
@@ -39,7 +39,9 @@ class RolesReaderTest < Minitest::Test
   describe '#list_roles' do
     test 'reads roles from paths' do
       RolesReaderTest.expect_content_config ["roles_path = #{ROLES_PATH}"]
-      Proxy::Ansible::RolesReader.expects(:read_roles).with(ROLES_PATH)
+      ROLES_PATH.split(":").map do |path|
+        Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
+      end
       Proxy::Ansible::RolesReader.list_roles
     end
 
@@ -60,7 +62,7 @@ class RolesReaderTest < Minitest::Test
       end
 
       test 'handles "No such file or dir" with exception' do
-        Dir.expects(:glob).with("#{ROLES_PATH}/*").raises(Errno::ENOENT)
+        Dir.expects(:glob).with("#{ROLES_PATH.split(':').first}/*").raises(Errno::ENOENT)
         ex = assert_raises(Proxy::Ansible::ReadRolesException) do
           Proxy::Ansible::RolesReader.list_roles
         end
@@ -68,7 +70,7 @@ class RolesReaderTest < Minitest::Test
       end
 
       test 'raises error if the roles path is not readable' do
-        Dir.expects(:glob).with("#{ROLES_PATH}/*").raises(Errno::EACCES)
+        Dir.expects(:glob).with("#{ROLES_PATH.split(':').first}/*").raises(Errno::EACCES)
         ex = assert_raises(Proxy::Ansible::ReadRolesException) do
           Proxy::Ansible::RolesReader.list_roles
         end
