@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
     Smart-Proxy ansible plugin
   EOS
 
-  gem.files            = Dir['bundler.plugins.d/smart_proxy_ansible.rb',
+  gem.files            = Dir['bundler.d/ansible.rb',
                              'settings.d/**/*',
                              'LICENSE', 'README.md', 'bin/json_inventory.sh',
                              'lib/smart_proxy_ansible.rb',
