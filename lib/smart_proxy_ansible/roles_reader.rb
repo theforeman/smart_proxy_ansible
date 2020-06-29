@@ -7,18 +7,30 @@ module Proxy
       class << self
         DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'.freeze
         DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'.freeze
+        DEFAULT_COLLECTIONS_PATHS = '/etc/ansible/collections:/usr/share/ansible/collections'.freeze
 
         def list_roles
-          roles_path.split(':').map { |path| read_roles(path) }.flatten
+          roles = roles_path.split(':').map { |path| read_roles(path) }.flatten
+          collection_roles = collections_paths.split(':').map { |path| read_collection_roles(path) }.flatten
+          roles + collection_roles
         end
 
-        def roles_path(roles_line = roles_path_from_config)
+        def roles_path
+          config_path('roles_path',DEFAULT_ROLES_PATH)
+        end
+
+        def collections_paths
+          config_path('collections_paths',DEFAULT_COLLECTIONS_PATHS)
+        end
+
+        def config_path(config_key,default)
+          config_line=path_from_config(config_key)
           # Default to /etc/ansible/roles if none found
-          return DEFAULT_ROLES_PATH if roles_line.empty?
-          roles_path_key = roles_line.first.split('=').first.strip
+          return default if config_line.empty?
+          config_line_key = config_line.first.split('=').first.strip
           # In case of commented roles_path key "#roles_path", return default
-          return DEFAULT_ROLES_PATH unless roles_path_key == 'roles_path'
-          roles_line.first.split('=').last.strip
+          return default unless config_line_key == config_key
+          config_line.first.split('=').last.strip
         end
 
         def logger
@@ -45,11 +57,27 @@ module Proxy
 
         def glob_path(path)
           Dir.glob path
+
         end
 
-        def roles_path_from_config
+        def read_collection_roles(collections_path)
+          Dir.glob("#{collections_path}/ansible_collections/*/*/roles/*").map do |path|
+            parts = path.split('/')
+            role = parts.pop
+            parts.pop
+            collection = parts.pop
+            author = parts.pop
+            "#{author}.#{collection}.#{role}"
+          end
+        rescue Errno::ENOENT, Errno::EACCES => e
+          logger.debug(e.backtrace)
+          message = "Could not read Ansible roles #{collections_path} - #{e.message}"
+          raise ReadRolesException.new(message), message
+        end
+
+        def path_from_config(config_key)
           File.readlines(DEFAULT_CONFIG_FILE).select do |line|
-            line =~ /^\s*roles_path/
+            line =~ /^\s*#{config_key}/
           end
         rescue Errno::ENOENT, Errno::EACCES => e
           logger.debug(e.backtrace)
