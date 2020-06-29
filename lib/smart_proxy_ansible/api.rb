@@ -36,11 +36,16 @@ module Proxy
 
       def extract_variables(role_name)
         variables = {}
-        RolesReader.roles_path.split(':').each do |path|
-          role_path = "#{path}/#{role_name}"
-          if File.directory?(role_path)
+        role_name_parts = role_name.split('.')
+        if role_name_parts.count == 3
+          RolesReader.collections_paths.split(':').each do |path|
             variables[role_name] ||= VariablesExtractor
-                                     .extract_variables(role_path)
+                                   .extract_variables("#{path}/ansible_collections/#{role_name_parts[0]}/#{role_name_parts[1]}/roles/#{role_name_parts[2]}")
+          end
+        else
+          RolesReader.roles_path.split(':').each do |path|
+            variables[role_name] ||= VariablesExtractor
+                                   .extract_variables("#{path}/#{role_name}")
           end
         end
         variables
