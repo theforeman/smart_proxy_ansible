@@ -11,35 +11,35 @@ class RolesReaderTest < Minitest::Test
 
   def self.expect_content_config(ansible_cfg_content)
     Proxy::Ansible::RolesReader.expects(:roles_path_from_config)
-      .returns(ansible_cfg_content)
+                               .returns(ansible_cfg_content)
   end
 
   describe '#roles_path' do
     test 'detects commented roles_path' do
       RolesReaderTest.expect_content_config ['#roles_path = thisiscommented!']
       assert_equal(ROLES_PATH,
-                   Proxy::Ansible::RolesReader.roles_path)
+        Proxy::Ansible::RolesReader.roles_path)
     end
 
     test 'returns default path if no roles_path defined' do
       RolesReaderTest.expect_content_config ['norolepath!']
       assert_equal(ROLES_PATH,
-                   Proxy::Ansible::RolesReader.roles_path)
+        Proxy::Ansible::RolesReader.roles_path)
     end
 
     test 'returns roles_path if one is defined' do
       RolesReaderTest.expect_content_config [
-        'roles_path = /mycustom/ansibleroles/path'
+        'roles_path = /mycustom/ansibleroles/path',
       ]
       assert_equal('/mycustom/ansibleroles/path',
-                   Proxy::Ansible::RolesReader.roles_path)
+        Proxy::Ansible::RolesReader.roles_path)
     end
   end
 
   describe '#list_roles' do
     test 'reads roles from paths' do
       RolesReaderTest.expect_content_config ["roles_path = #{ROLES_PATH}"]
-      ROLES_PATH.split(":").map do |path|
+      ROLES_PATH.split(':').map do |path|
         Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
       end
       Proxy::Ansible::RolesReader.list_roles
@@ -51,7 +51,7 @@ class RolesReaderTest < Minitest::Test
         Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
       end
       RolesReaderTest.expect_content_config [
-        "roles_path = #{roles_paths.join(':')}"
+        "roles_path = #{roles_paths.join(':')}",
       ]
       Proxy::Ansible::RolesReader.list_roles
     end

@@ -1,0 +1,18 @@
+inherit_gem:
+  theforeman-rubocop:
+    - default.yml
+
+inherit_mode:
+  merge:
+    - Exclude
+
+AllCops:
+  Exclude:
+    - 'vendor/bundle/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - test/**/*
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
