@@ -1,5 +1,5 @@
-require 'minitest/spec'
 require 'minitest/autorun'
+require 'minitest/spec'
 require 'mocha/minitest'
 require 'smart_proxy_for_testing'
 

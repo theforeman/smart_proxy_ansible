@@ -24,12 +24,11 @@ Gem::Specification.new do |gem|
   gem.require_paths    = ['lib']
   gem.license = 'GPL-3.0'
 
-  gem.add_development_dependency 'rake', '~> 10.0'
+  gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_development_dependency('minitest', '~> 0')
   gem.add_development_dependency('mocha', '~> 1')
-  gem.add_development_dependency('webmock', '~> 1')
+  gem.add_development_dependency('webmock', '~> 3')
   gem.add_development_dependency('rack-test', '~> 0')
-  gem.add_development_dependency('rubocop', '0.32.1')
   gem.add_development_dependency('logger')
   gem.add_development_dependency('smart_proxy')
   gem.add_runtime_dependency('smart_proxy_dynflow', '~> 0.1')
