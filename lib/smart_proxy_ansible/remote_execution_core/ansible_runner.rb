@@ -10,12 +10,12 @@ module Proxy::Ansible
       CONNECTION_PROMPT = 'Are you sure you want to continue connecting (yes/no)? '
 
       def initialize(options, suspended_action:)
-        super(options, :suspended_action => suspended_action)
+        super(options, suspended_action: suspended_action)
         @playbook_runner = Proxy::Ansible::Runner::Playbook.new(
           options['ansible_inventory'],
           options['script'],
           options,
-          :suspended_action => suspended_action
+          suspended_action: suspended_action
         )
       end
 

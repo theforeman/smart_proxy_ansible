@@ -1,0 +1,25 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_SMART_PROXY: '0'
+      SMART_PROXY_PATH: './smart-proxy'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: theforeman/smart-proxy
+          path: smart-proxy
+      - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.5
+          bundler-cache: true
+      - name: Run rubocop
+        run: bundle exec rubocop --format github

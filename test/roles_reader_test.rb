@@ -19,20 +19,20 @@ class RolesReaderTest < Minitest::Test
     test 'detects commented roles_path' do
       RolesReaderTest.expect_content_config ['#roles_path = thisiscommented!']
       assert_equal(ROLES_PATH,
-                   Proxy::Ansible::RolesReader.roles_path)
+        Proxy::Ansible::RolesReader.roles_path)
     end
 
     test 'returns default path if no roles_path defined' do
       assert_equal(ROLES_PATH,
-                   Proxy::Ansible::RolesReader.config_path(['#roles_path = thisiscommented!'], ROLES_PATH))
+        Proxy::Ansible::RolesReader.config_path(['#roles_path = thisiscommented!'], ROLES_PATH))
     end
 
     test 'returns roles_path if one is defined' do
       RolesReaderTest.expect_content_config [
-        'roles_path = /mycustom/ansibleroles/path'
+        'roles_path = /mycustom/ansibleroles/path',
       ]
       assert_equal('/mycustom/ansibleroles/path',
-                   Proxy::Ansible::RolesReader.roles_path)
+        Proxy::Ansible::RolesReader.roles_path)
     end
   end
 

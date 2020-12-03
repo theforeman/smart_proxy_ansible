@@ -58,7 +58,6 @@ module Proxy
 
         def glob_path(path)
           Dir.glob path
-
         end
 
         def read_collection_roles(collections_path)
