@@ -3,6 +3,11 @@ require 'minitest/spec'
 require 'mocha/minitest'
 require 'smart_proxy_for_testing'
 
+# initialize the logger prior testing
+# it uses Dir.glob, that we want to stub in some tests
+# if those tests run first, it throws unexpected invocation of Dir.glob
+::Proxy::LogBuffer::Decorator.instance
+
 module Minitest
   # Modifications to allow a 'test 'nameoftest' do' syntax
   class Test
