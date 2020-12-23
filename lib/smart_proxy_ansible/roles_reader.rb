@@ -15,9 +15,11 @@ module Proxy
         def roles_path(roles_line = roles_path_from_config)
           # Default to /etc/ansible/roles if none found
           return DEFAULT_ROLES_PATH if roles_line.empty?
+
           roles_path_key = roles_line.first.split('=').first.strip
           # In case of commented roles_path key "#roles_path", return default
           return DEFAULT_ROLES_PATH unless roles_path_key == 'roles_path'
+
           roles_line.first.split('=').last.strip
         end
 
@@ -34,8 +36,7 @@ module Proxy
         private
 
         def read_roles(roles_path)
-          rescue_and_raise_file_exception ReadRolesException,
-                                          roles_path, 'roles' do
+          rescue_and_raise_file_exception(ReadRolesException, roles_path, 'roles') do
             Dir.glob("#{roles_path}/*").map do |path|
               path.split('/').last
             end
@@ -44,7 +45,7 @@ module Proxy
 
         def roles_path_from_config
           rescue_and_raise_file_exception ReadConfigFileException,
-                                          DEFAULT_CONFIG_FILE, 'config file' do
+            DEFAULT_CONFIG_FILE, 'config file' do
             File.readlines(DEFAULT_CONFIG_FILE).select do |line|
               line =~ /^\s*roles_path/
             end

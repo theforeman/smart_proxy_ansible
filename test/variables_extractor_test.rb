@@ -9,7 +9,7 @@ class VariablesExtractorTest < Minitest::Test
 
       assert_equal Hash, res.class
       assert_equal 13, res.count
-      assert_equal "postgres", res["postgresql_user"]
+      assert_equal 'postgres', res['postgresql_user']
     end
 
     test 'raises when fails to parse' do
