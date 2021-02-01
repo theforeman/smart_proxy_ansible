@@ -2,6 +2,10 @@
 
 Proxy plugin to make [foreman_ansible](https://github.com/theforeman/foreman_ansible) actions run in the proxy
 
+## Compatibility
+
+This plugin requires at least Foreman Proxy 2.3.
+
 ## Installation (in development)
 
 ### Prerequisites
