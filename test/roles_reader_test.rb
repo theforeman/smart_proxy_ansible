@@ -10,7 +10,7 @@ class RolesReaderTest < Minitest::Test
   ROLES_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_ROLES_PATH
 
   def self.expect_content_config(ansible_cfg_content)
-    Proxy::Ansible::RolesReader.expects(:roles_path_from_config)
+    Proxy::Ansible::RolesReader.expects(:path_from_config)
       .returns(ansible_cfg_content)
   end
 
