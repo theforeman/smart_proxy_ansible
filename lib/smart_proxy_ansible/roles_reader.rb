@@ -5,20 +5,17 @@ module Proxy
     # Implements the logic needed to read the roles and associated information
     class RolesReader
       class << self
-        DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'.freeze
-        DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'.freeze
-
         def list_roles
           roles_path.split(':').map { |path| read_roles(path) }.flatten
         end
 
-        def roles_path(roles_line = roles_path_from_config)
-          # Default to /etc/ansible/roles if none found
-          return DEFAULT_ROLES_PATH if roles_line.empty?
-          roles_path_key = roles_line.first.split('=').first.strip
-          # In case of commented roles_path key "#roles_path", return default
-          return DEFAULT_ROLES_PATH unless roles_path_key == 'roles_path'
-          roles_line.first.split('=').last.strip
+        def roles_path
+          roles_line = roles_path_from_config
+          exception = ReadConfigFileException.new("Could not find 'roles_path' in #{config_file_path}")
+          raise exception if roles_line.empty?
+          split_roles_line = roles_line.first.split('=')
+          raise exception unless split_roles_line.first.strip == 'roles_path'
+          split_roles_line.last.strip
         end
 
         def logger
@@ -33,6 +30,10 @@ module Proxy
 
         private
 
+        def config_file_path
+          File.join ::Proxy::Ansible::Plugin.settings.ansible_working_dir, '.ansible.cfg'
+        end
+
         def read_roles(roles_path)
           rescue_and_raise_file_exception ReadRolesException,
                                           roles_path, 'roles' do
@@ -44,8 +45,8 @@ module Proxy
 
         def roles_path_from_config
           rescue_and_raise_file_exception ReadConfigFileException,
-                                          DEFAULT_CONFIG_FILE, 'config file' do
-            File.readlines(DEFAULT_CONFIG_FILE).select do |line|
+                                          config_file_path, 'config file' do
+            File.readlines(config_file_path).select do |line|
               line =~ /^\s*roles_path/
             end
           end
