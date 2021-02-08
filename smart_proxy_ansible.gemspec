@@ -25,7 +25,6 @@ Gem::Specification.new do |gem|
   gem.license = 'GPL-3.0'
 
   gem.add_development_dependency 'rake', '~> 13.0'
-  gem.add_development_dependency('minitest', '~> 0')
   gem.add_development_dependency('mocha', '~> 1')
   gem.add_development_dependency('webmock', '~> 3')
   gem.add_development_dependency('rack-test', '~> 0')

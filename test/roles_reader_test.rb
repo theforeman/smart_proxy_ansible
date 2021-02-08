@@ -62,7 +62,8 @@ class RolesReaderTest < Minitest::Test
       end
 
       test 'handles "No such file or dir" with exception' do
-        Dir.expects(:glob).with("#{ROLES_PATH.split(':').first}/*").raises(Errno::ENOENT)
+        Proxy::Ansible::RolesReader.stubs(:glob_path).raises(Errno::ENOENT)
+
         ex = assert_raises(Proxy::Ansible::ReadRolesException) do
           Proxy::Ansible::RolesReader.list_roles
         end
@@ -70,7 +71,8 @@ class RolesReaderTest < Minitest::Test
       end
 
       test 'raises error if the roles path is not readable' do
-        Dir.expects(:glob).with("#{ROLES_PATH.split(':').first}/*").raises(Errno::EACCES)
+        Proxy::Ansible::RolesReader.stubs(:glob_path).raises(Errno::EACCES)
+
         ex = assert_raises(Proxy::Ansible::ReadRolesException) do
           Proxy::Ansible::RolesReader.list_roles
         end
