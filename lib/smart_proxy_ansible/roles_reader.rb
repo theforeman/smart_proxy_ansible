@@ -36,10 +36,14 @@ module Proxy
         def read_roles(roles_path)
           rescue_and_raise_file_exception ReadRolesException,
                                           roles_path, 'roles' do
-            Dir.glob("#{roles_path}/*").map do |path|
+            glob_path("#{roles_path}/*").map do |path|
               path.split('/').last
             end
           end
+        end
+
+        def glob_path(path)
+          Dir.glob path
         end
 
         def roles_path_from_config

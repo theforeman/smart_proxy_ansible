@@ -7,6 +7,7 @@ group :development do
                      branch: 'develop'
   #gem 'smart_proxy', path: '../smart-proxy'
   gem 'pry'
+  gem 'pry-byebug'
 end
 
 group :test do
