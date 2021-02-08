@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.files            = Dir['bundler.d/ansible.rb',
                              'settings.d/**/*',
-                             'LICENSE', 'README.md', 'bin/json_inventory.sh',
+                             'LICENSE', 'README.md',
                              'lib/smart_proxy_ansible.rb',
                              'lib/smart_proxy_ansible/**/*']
   gem.extra_rdoc_files = ['README.md', 'LICENSE']
