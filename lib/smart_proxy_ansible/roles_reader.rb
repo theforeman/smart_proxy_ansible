@@ -34,12 +34,13 @@ module Proxy
         private
 
         def read_roles(roles_path)
-          rescue_and_raise_file_exception ReadRolesException,
-                                          roles_path, 'roles' do
-            glob_path("#{roles_path}/*").map do |path|
-              path.split('/').last
-            end
+          glob_path("#{roles_path}/*").map do |path|
+            path.split('/').last
           end
+        rescue Errno::ENOENT, Errno::EACCES => e
+          logger.debug(e.backtrace)
+          message = "Could not read Ansible roles #{roles_path} - #{e.message}"
+          raise ReadRolesException.new(message), message
         end
 
         def glob_path(path)
@@ -47,21 +48,13 @@ module Proxy
         end
 
         def roles_path_from_config
-          rescue_and_raise_file_exception ReadConfigFileException,
-                                          DEFAULT_CONFIG_FILE, 'config file' do
-            File.readlines(DEFAULT_CONFIG_FILE).select do |line|
-              line =~ /^\s*roles_path/
-            end
+          File.readlines(DEFAULT_CONFIG_FILE).select do |line|
+            line =~ /^\s*roles_path/
           end
-        end
-
-        def rescue_and_raise_file_exception(exception, path, type)
-          yield
         rescue Errno::ENOENT, Errno::EACCES => e
           logger.debug(e.backtrace)
-          exception_message = "Could not read Ansible #{type} "\
-            "#{path} - #{e.message}"
-          raise exception.new(exception_message), exception_message
+          message = "Could not read Ansible config file #{DEFAULT_CONFIG_FILE} - #{e.message}"
+          raise ReadConfigFileException.new(message), message
         end
       end
     end
