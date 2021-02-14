@@ -16,20 +16,21 @@ module Proxy
         end
 
         def roles_path
-          config_path('roles_path',DEFAULT_ROLES_PATH)
+          config_path(path_from_config('roles_path'), DEFAULT_ROLES_PATH)
         end
 
         def collections_paths
-          config_path('collections_paths',DEFAULT_COLLECTIONS_PATHS)
+          config_path(path_from_config('collections_paths'), DEFAULT_COLLECTIONS_PATHS)
         end
 
-        def config_path(config_key,default)
-          config_line=path_from_config(config_key)
-          # Default to /etc/ansible/roles if none found
+        def config_path(config_line, default)
+          # Default to /etc/ansible/roles if config_line is empty
           return default if config_line.empty?
+
           config_line_key = config_line.first.split('=').first.strip
-          # In case of commented roles_path key "#roles_path", return default
-          return default unless config_line_key == config_key
+          # In case of commented roles_path key "#roles_path" or #collections_paths, return default
+          return default if ['#roles_path', '#collections_paths'].include?(config_line_key)
+
           config_line.first.split('=').last.strip
         end
 

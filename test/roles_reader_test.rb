@@ -8,10 +8,11 @@ require_relative '../lib/smart_proxy_ansible/roles_reader'
 class RolesReaderTest < Minitest::Test
   CONFIG_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_CONFIG_FILE
   ROLES_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_ROLES_PATH
+  COLLECTIONS_PATHS = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_COLLECTIONS_PATHS
 
   def self.expect_content_config(ansible_cfg_content)
-    Proxy::Ansible::RolesReader.expects(:roles_path_from_config)
-      .returns(ansible_cfg_content)
+    Proxy::Ansible::RolesReader.expects(:path_from_config)
+                               .returns(ansible_cfg_content)
   end
 
   describe '#roles_path' do
@@ -22,9 +23,8 @@ class RolesReaderTest < Minitest::Test
     end
 
     test 'returns default path if no roles_path defined' do
-      RolesReaderTest.expect_content_config ['norolepath!']
       assert_equal(ROLES_PATH,
-                   Proxy::Ansible::RolesReader.roles_path)
+                   Proxy::Ansible::RolesReader.config_path(['#roles_path = thisiscommented!'], ROLES_PATH))
     end
 
     test 'returns roles_path if one is defined' do
@@ -38,21 +38,29 @@ class RolesReaderTest < Minitest::Test
 
   describe '#list_roles' do
     test 'reads roles from paths' do
-      RolesReaderTest.expect_content_config ["roles_path = #{ROLES_PATH}"]
-      ROLES_PATH.split(":").map do |path|
+      Proxy::Ansible::RolesReader.expects(:path_from_config).with('roles_path').returns(["roles_path = #{ROLES_PATH}"])
+      Proxy::Ansible::RolesReader.expects(:path_from_config).with('collections_paths').returns(["collections_paths = #{COLLECTIONS_PATHS}"])
+
+      ROLES_PATH.split(':').map do |path|
         Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
+      end
+      COLLECTIONS_PATHS.split(':').map do |path|
+        Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
       end
       Proxy::Ansible::RolesReader.list_roles
     end
 
     test 'reads roles from multiple paths' do
-      roles_paths = ['/mycustom/roles/path', '/another/path']
-      roles_paths.each do |path|
+      roles_paths = '/mycustom/roles/path:/another/path'
+      collections_paths = '/mycustom/collections/roles/path:/another/collections/path'
+      Proxy::Ansible::RolesReader.expects(:roles_path).returns(roles_paths)
+      Proxy::Ansible::RolesReader.expects(:collections_paths).returns(collections_paths)
+      collections_paths.split(':').map do |path|
+        Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
+      end
+      roles_paths.split(':').map do |path|
         Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
       end
-      RolesReaderTest.expect_content_config [
-        "roles_path = #{roles_paths.join(':')}"
-      ]
       Proxy::Ansible::RolesReader.list_roles
     end
 
