@@ -40,8 +40,10 @@ module Proxy
           end
         else
           RolesReader.roles_path.split(':').each do |path|
-            variables[role_name] ||= VariablesExtractor
-                                   .extract_variables("#{path}/#{role_name}")
+            role_path = "#{path}/#{role_name}"
+            if File.directory?(role_path)
+              variables[role_name] ||= VariablesExtractor.extract_variables(role_path)
+            end
           end
         end
         variables
