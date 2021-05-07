@@ -2,6 +2,7 @@
 
 require 'test_helper'
 require 'smart_proxy_ansible'
+require 'smart_proxy_ansible/runner/playbook'
 
 class CommandCreatorTest < Minitest::Test
   describe 'CommandCreator' do
