@@ -14,6 +14,7 @@ module Proxy::Ansible
         @root = working_dir
         @verbosity_level = action_input[:verbosity_level]
         @rex_command = action_input[:remote_execution_command]
+        @check_mode = action_input[:check_mode]
       end
 
       def start
@@ -110,6 +111,7 @@ module Proxy::Ansible
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
         command = [env, 'ansible-runner', 'run', @root, '-p', 'playbook.yml']
+        command << '--cmdline' << '"--check"' if check_mode?
         command << verbosity if verbose?
         initialize_command(*command)
         logger.debug("[foreman_ansible] - Running command '#{command.join(' ')}'")
@@ -121,6 +123,10 @@ module Proxy::Ansible
 
       def verbose?
         @verbosity_level.to_i.positive?
+      end
+
+      def check_mode?
+        @check_mode == true
       end
 
       def prepare_directory_structure
