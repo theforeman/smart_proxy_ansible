@@ -1,4 +1,4 @@
-module ForemanAnsibleCore
+module Proxy::Ansible
   module TaskLauncher
     class Playbook < ForemanTasksCore::TaskLauncher::Batch
       class PlaybookRunnerAction < ForemanTasksCore::Runner::Action
@@ -7,7 +7,7 @@ module ForemanAnsibleCore
             :step_id => run_step_id,
             :uuid => execution_plan_id
           }
-          ::ForemanAnsibleCore::RemoteExecutionCore::AnsibleRunner.new(
+          ::Proxy::Ansible::RemoteExecutionCore::AnsibleRunner.new(
             input.merge(additional_options),
             :suspended_action => suspended_action
           )

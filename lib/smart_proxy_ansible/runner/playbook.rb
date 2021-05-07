@@ -5,7 +5,7 @@ require_relative 'command_creator'
 require 'tmpdir'
 require 'net/ssh'
 
-module ForemanAnsibleCore
+module Proxy::Ansible
   module Runner
     # Implements ForemanTasksCore::Runner::Base interface for running
     # Ansible playbooks, used by the Foreman Ansible plugin and Ansible proxy
@@ -82,7 +82,7 @@ module ForemanAnsibleCore
       end
 
       def initialize_dirs
-        settings = ForemanAnsibleCore.settings
+        settings = Proxy::Ansible::Plugin.settings
         initialize_working_dir(settings[:working_dir])
         initialize_ansible_dir(settings[:ansible_dir])
       end

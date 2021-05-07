@@ -1,6 +1,7 @@
 require 'fileutils'
+require 'smart_proxy_ansible/runner/ansible_runner'
 
-module ForemanAnsibleCore
+module Proxy::Ansible
   module TaskLauncher
     class AnsibleRunner < ForemanTasksCore::TaskLauncher::AbstractGroup
       def runner_input(input)

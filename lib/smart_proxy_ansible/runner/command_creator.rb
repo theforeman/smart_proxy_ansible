@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ForemanAnsibleCore
+module Proxy::Ansible
   # Creates the actual command to be passed to foreman_tasks_core to run
   class CommandCreator
     def initialize(inventory_file, playbook_file, options = {})

@@ -1,6 +1,7 @@
 require 'shellwords'
 
-module ForemanAnsibleCore
+require 'foreman_tasks_core/runner/command_runner'
+module Proxy::Ansible
   module Runner
     class AnsibleRunner < ForemanTasksCore::Runner::Parent
       include ForemanTasksCore::Runner::Command
@@ -151,7 +152,7 @@ module ForemanAnsibleCore
 
       def working_dir
         return @root if @root
-        dir = ForemanAnsibleCore.settings[:working_dir]
+        dir = Proxy::Ansible::Plugin.settings[:working_dir]
         @tmp_working_dir = true
         if dir.nil?
           Dir.mktmpdir

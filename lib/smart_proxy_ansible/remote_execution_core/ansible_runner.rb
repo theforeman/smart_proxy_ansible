@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ForemanAnsibleCore
+module Proxy::Ansible
   module RemoteExecutionCore
     # Takes an inventory and runs it through REXCore CommandRunner
     class AnsibleRunner < ::ForemanTasksCore::Runner::CommandRunner
@@ -9,7 +9,7 @@ module ForemanAnsibleCore
 
       def initialize(options, suspended_action:)
         super(options, :suspended_action => suspended_action)
-        @playbook_runner = ForemanAnsibleCore::Runner::Playbook.new(
+        @playbook_runner = Proxy::Ansible::Runner::Playbook.new(
           options['ansible_inventory'],
           options['script'],
           options,
