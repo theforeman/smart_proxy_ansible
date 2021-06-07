@@ -1,4 +1,5 @@
 require 'shellwords'
+require 'yaml'
 
 require 'smart_proxy_dynflow/runner/command'
 require 'smart_proxy_dynflow/runner/base'
@@ -19,12 +20,14 @@ module Proxy::Ansible
         @check_mode = action_input[:check_mode]
         @tags = action_input[:tags]
         @tags_flag = action_input[:tags_flag]
+        @passphrase = action_input['secrets']['key_passphrase']
       end
 
       def start
         prepare_directory_structure
         write_inventory
         write_playbook
+        write_ssh_key if !@passphrase.nil? && !@passphrase.empty?
         start_ansible_runner
       end
 
@@ -111,6 +114,19 @@ module Proxy::Ansible
         File.write(File.join(@root, 'project', 'playbook.yml'), @playbook)
       end
 
+      def write_ssh_key
+        key_path = File.join(@root, 'env', 'ssh_key')
+        File.symlink(File.expand_path(ForemanRemoteExecutionCore.settings[:ssh_identity_key_file]), key_path)
+
+        passwords_path = File.join(@root, 'env', 'passwords')
+        # here we create a secrets file for ansible-runner, which uses the key as regexp
+        # to match line asking for password, given the limitation to match only first 100 chars
+        # and the fact the line contains dynamically created temp directory, the regexp
+        # mentions only things that are always there, such as artifacts directory and the key name
+        secrets = YAML.dump({ "for.*/artifacts/.*/ssh_key_data:" => @passphrase })
+        File.write(passwords_path, secrets, perm: 0o600)
+      end
+
       def start_ansible_runner
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
@@ -149,7 +165,7 @@ module Proxy::Ansible
       end
 
       def prepare_directory_structure
-        inner = %w[inventory project].map { |part| File.join(@root, part) }
+        inner = %w[inventory project env].map { |part| File.join(@root, part) }
         ([@root] + inner).each do |path|
           FileUtils.mkdir_p path
         end
