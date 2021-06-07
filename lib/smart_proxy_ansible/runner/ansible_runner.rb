@@ -15,6 +15,8 @@ module Proxy::Ansible
         @verbosity_level = action_input[:verbosity_level]
         @rex_command = action_input[:remote_execution_command]
         @check_mode = action_input[:check_mode]
+        @tags = action_input[:tags]
+        @tags_flag = action_input[:tags_flag]
       end
 
       def start
@@ -111,10 +113,25 @@ module Proxy::Ansible
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
         command = [env, 'ansible-runner', 'run', @root, '-p', 'playbook.yml']
-        command << '--cmdline' << '"--check"' if check_mode?
+        command << '--cmdline' << cmdline unless cmdline.nil?
         command << verbosity if verbose?
         initialize_command(*command)
         logger.debug("[foreman_ansible] - Running command '#{command.join(' ')}'")
+      end
+
+      def cmdline
+        cmd_args = [tags_cmd, check_cmd].reject(&:empty?)
+        return nil unless cmd_args.any?
+        cmd_args.join(' ')
+      end
+
+      def tags_cmd
+        flag = @tags_flag == 'include' ? '--tags' : '--skip-tags'
+        @tags.empty? ? '' : "#{flag} '#{Array(@tags).join(',')}'"
+      end
+
+      def check_cmd
+        check_mode? ? '--check' : ''
       end
 
       def verbosity
