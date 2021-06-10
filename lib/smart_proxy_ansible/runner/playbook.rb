@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-require 'foreman_tasks_core/runner/command_runner'
+require 'smart_proxy_dynflow/continuous_output'
+require 'smart_proxy_dynflow/runner/command_runner'
 require_relative 'command_creator'
 require 'tmpdir'
 require 'net/ssh'
 
 module Proxy::Ansible
   module Runner
-    # Implements ForemanTasksCore::Runner::Base interface for running
+    # Implements Proxy::Dynflow::Runner::Base interface for running
     # Ansible playbooks, used by the Foreman Ansible plugin and Ansible proxy
-    class Playbook < ForemanTasksCore::Runner::CommandRunner
+    class Playbook < Proxy::Dynflow::Runner::CommandRunner
       attr_reader :command_out, :command_in, :command_pid
 
       def initialize(inventory, playbook, options = {}, suspended_action:)

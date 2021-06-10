@@ -2,8 +2,6 @@
 
 require 'test_helper'
 require 'smart_proxy_ansible'
-require 'foreman_tasks_core'
-require 'foreman_tasks_core/runner/command'
 require 'smart_proxy_ansible/runner/ansible_runner'
 
 module Proxy::Ansible
