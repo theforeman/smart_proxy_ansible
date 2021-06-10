@@ -168,7 +168,7 @@ module Proxy::Ansible
         inventories = action_inputs.map { |hash| hash[:ansible_inventory] }
         host_vars = inventories.map { |i| i['_meta']['hostvars'] }.reduce({}) do |acc, hosts|
           hosts.reduce(acc) do |inner_acc, (hostname, vars)|
-            vars[:ansible_ssh_private_key_file] ||= ForemanRemoteExecutionCore.settings[:ssh_identity_key_file]
+            vars[:ansible_ssh_private_key_file] ||= Proxy::RemoteExecution::Ssh::Plugin.settings[:ssh_identity_key_file]
             inner_acc.merge(hostname => vars)
           end
         end
