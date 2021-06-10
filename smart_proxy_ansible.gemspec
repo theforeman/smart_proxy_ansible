@@ -32,7 +32,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('logger')
   gem.add_development_dependency('smart_proxy')
   gem.add_runtime_dependency('foreman-tasks-core', '~> 0.3.2')
-  gem.add_runtime_dependency('foreman_remote_execution_core', '~> 1.1')
   gem.add_runtime_dependency('net-ssh')
   gem.add_runtime_dependency('smart_proxy_dynflow', '~> 0.1')
+  gem.add_runtime_dependency('smart_proxy_remote_execution_ssh', '~> 0.4')
 end
