@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Proxy::Ansible
-  # Creates the actual command to be passed to foreman_tasks_core to run
+  # Creates the actual command to be passed to smart_proxy_dynflow to run
   class CommandCreator
     def initialize(inventory_file, playbook_file, options = {})
       @options = options

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+require 'smart_proxy_dynflow/runner/command_runner'
+
 module Proxy::Ansible
   module RemoteExecutionCore
     # Takes an inventory and runs it through REXCore CommandRunner
-    class AnsibleRunner < ::ForemanTasksCore::Runner::CommandRunner
+    class AnsibleRunner < ::Proxy::Dynflow::Runner::CommandRunner
       DEFAULT_REFRESH_INTERVAL = 1
       CONNECTION_PROMPT = 'Are you sure you want to continue connecting (yes/no)? '
 

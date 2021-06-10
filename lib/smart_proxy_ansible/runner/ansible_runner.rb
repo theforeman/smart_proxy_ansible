@@ -1,10 +1,12 @@
 require 'shellwords'
 
-require 'foreman_tasks_core/runner/command_runner'
+require 'smart_proxy_dynflow/runner/command'
+require 'smart_proxy_dynflow/runner/base'
+require 'smart_proxy_dynflow/runner/parent'
 module Proxy::Ansible
   module Runner
-    class AnsibleRunner < ForemanTasksCore::Runner::Parent
-      include ForemanTasksCore::Runner::Command
+    class AnsibleRunner < ::Proxy::Dynflow::Runner::Parent
+      include ::Proxy::Dynflow::Runner::Command
 
       def initialize(input, suspended_action:)
         super input, :suspended_action => suspended_action

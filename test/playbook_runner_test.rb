@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'foreman_tasks_core'
+require 'smart_proxy_dynflow'
 require 'smart_proxy_ansible'
 
-# Playbook Runner - this class uses foreman_tasks_core
+# Playbook Runner - this class uses smart_proxy_dynflow
 # to run playbooks
 class PlaybookRunnerTest < Minitest::Test
   describe 'PlaybookRunner' do
