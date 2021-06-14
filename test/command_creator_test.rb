@@ -28,7 +28,7 @@ class CommandCreatorTest < Minitest::Test
       end
 
       test 'has no ANSIBLE_CALLBACK_WHITELIST set by default' do
-        refute environment_variables['ANSIBLE_CALLBACK_WHITELIST']
+        assert_not environment_variables['ANSIBLE_CALLBACK_WHITELIST']
       end
 
       test 'with a REX command it sets ANSIBLE_CALLBACK_WHITELIST to empty' do
@@ -62,7 +62,7 @@ class CommandCreatorTest < Minitest::Test
 
     def set_command_options(option, value)
       subject.instance_eval("@options[:#{option}] = \"#{value}\"",
-                            __FILE__, __LINE__ - 1)
+        __FILE__, __LINE__ - 1)
     end
   end
 end

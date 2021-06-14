@@ -7,7 +7,7 @@ module Proxy::Ansible
       include ForemanTasksCore::Runner::Command
 
       def initialize(input, suspended_action:)
-        super input, :suspended_action => suspended_action
+        super input, suspended_action: suspended_action
         @inventory = rebuild_secrets(rebuild_inventory(input), input)
         action_input = input.values.first[:input][:action_input]
         @playbook = action_input[:script]
@@ -81,7 +81,7 @@ module Proxy::Ansible
       end
 
       def handle_broadcast_data(event)
-        log_event("broadcast", event)
+        log_event('broadcast', event)
         if event['event'] == 'playbook_on_stats'
           header, *rows = event['stdout'].strip.lines.map(&:chomp)
           @outputs.keys.select { |key| key.is_a? String }.each do |host|
@@ -156,7 +156,9 @@ module Proxy::Ansible
       def log_event(description, event)
         # TODO: replace this ugly code with block variant once https://github.com/Dynflow/dynflow/pull/323
         # arrives in production
-        logger.debug("[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}") if logger.level <= ::Logger::DEBUG
+        if logger.level <= ::Logger::DEBUG
+          logger.debug("[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}")
+        end
       end
 
       # Each per-host task has inventory only for itself, we must
@@ -196,7 +198,7 @@ module Proxy::Ansible
 
           new_secrets = {
             'ansible_password' => inventory['ssh_password'] || per_host['ansible_password'],
-            'ansible_become_password' => inventory['effective_user_password'] || per_host['ansible_become_password']
+            'ansible_become_password' => inventory['effective_user_password'] || per_host['ansible_become_password'],
           }
           inventory['_meta']['hostvars'][host].update(new_secrets)
         end

@@ -13,7 +13,7 @@ module Proxy::Ansible
       attr_reader :command_out, :command_in, :command_pid
 
       def initialize(inventory, playbook, options = {}, suspended_action:)
-        super :suspended_action => suspended_action
+        super suspended_action: suspended_action
         @inventory = rebuild_secrets(inventory, options[:secrets])
         unknown_hosts.each do |host|
           add_to_known_hosts(host)
@@ -27,8 +27,8 @@ module Proxy::Ansible
         write_inventory
         write_playbook
         command = CommandCreator.new(inventory_file,
-                                     playbook_file,
-                                     @options).command
+          playbook_file,
+          @options).command
         logger.debug('[foreman_ansible] - Initializing Ansible Runner')
         Dir.chdir(@ansible_dir) do
           initialize_command(*command)
@@ -125,7 +125,7 @@ module Proxy::Ansible
 
           new_secrets = {
             'ansible_password' => inventory['ssh_password'] || per_host['ansible_password'],
-            'ansible_become_password' => inventory['effective_user_password'] || per_host['ansible_become_password']
+            'ansible_become_password' => inventory['effective_user_password'] || per_host['ansible_become_password'],
           }
           inventory['_meta']['hostvars'][name].update(new_secrets)
         end
