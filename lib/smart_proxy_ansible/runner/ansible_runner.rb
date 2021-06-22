@@ -8,6 +8,7 @@ module Proxy::Ansible
   module Runner
     class AnsibleRunner < ::Proxy::Dynflow::Runner::Parent
       include ::Proxy::Dynflow::Runner::Command
+      attr_reader :execution_timeout_interval, :command_pid
 
       def initialize(input, suspended_action:)
         super input, :suspended_action => suspended_action
@@ -21,6 +22,7 @@ module Proxy::Ansible
         @tags = action_input[:tags]
         @tags_flag = action_input[:tags_flag]
         @passphrase = action_input['secrets']['key_passphrase']
+        @execution_timeout_interval = action_input[:execution_timeout_interval]
       end
 
       def start
@@ -49,9 +51,26 @@ module Proxy::Ansible
         end
       end
 
+      def timeout
+        logger.debug('job timed out')
+        super
+      end
+
+      def timeout_interval
+        execution_timeout_interval
+      end
+
+      def kill
+        ::Process.kill('SIGTERM', @command_pid)
+        publish_exit_status(2)
+        @inventory['all']['hosts'].each { |hostname| @exit_statuses[hostname] = 2 }
+        broadcast_data('Timeout for execution passed, stopping the job', 'stderr')
+        close
+      end
+
       def close
         super
-        FileUtils.remove_entry(@root) if @tmp_working_dir
+        FileUtils.remove_entry(@root) if @tmp_working_dir && Dir.exist?(@root)
       end
 
       private
