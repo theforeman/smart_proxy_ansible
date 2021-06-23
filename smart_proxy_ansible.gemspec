@@ -18,7 +18,8 @@ Gem::Specification.new do |gem|
                              'settings.d/**/*',
                              'LICENSE', 'README.md',
                              'lib/smart_proxy_ansible.rb',
-                             'lib/smart_proxy_ansible/**/*']
+                             'lib/smart_proxy_ansible/**/*',
+                             'bin/json_inventory.sh']
   gem.extra_rdoc_files = ['README.md', 'LICENSE']
   gem.test_files       = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths    = ['lib']
