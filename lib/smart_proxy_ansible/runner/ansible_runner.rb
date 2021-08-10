@@ -141,7 +141,7 @@ module Proxy::Ansible
 
       def write_ssh_key
         key_path = File.join(@root, 'env', 'ssh_key')
-        File.symlink(File.expand_path(ForemanRemoteExecutionCore.settings[:ssh_identity_key_file]), key_path)
+        File.symlink(File.expand_path(Proxy::RemoteExecution::Ssh::Plugin.settings[:ssh_identity_key_file]), key_path)
 
         passwords_path = File.join(@root, 'env', 'passwords')
         # here we create a secrets file for ansible-runner, which uses the key as regexp
