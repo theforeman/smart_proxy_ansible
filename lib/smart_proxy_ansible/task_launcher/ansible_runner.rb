@@ -24,7 +24,7 @@ module Proxy::Ansible
       # Discard everything apart from hostname to be able to tell the actions
       # apart when debugging
       def transform_input(input)
-        { 'action_input' => input['action_input'].slice('name') }
+        { 'action_input' => super['action_input'].slice('name', :task_id) }
       end
 
       # def self.input_format
