@@ -174,7 +174,7 @@ module Proxy::Ansible
       end
 
       def check_cmd
-        check_mode? ? '--check' : ''
+        check_mode? ? '"--check"' : ''
       end
 
       def verbosity
@@ -186,7 +186,7 @@ module Proxy::Ansible
       end
 
       def check_mode?
-        @check_mode == true
+        @check_mode == true && @rex_command == false
       end
 
       def prepare_directory_structure
