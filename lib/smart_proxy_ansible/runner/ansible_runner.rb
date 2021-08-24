@@ -23,6 +23,7 @@ module Proxy::Ansible
         @tags_flag = action_input[:tags_flag]
         @passphrase = action_input['secrets']['key_passphrase']
         @execution_timeout_interval = action_input[:execution_timeout_interval]
+        @cleanup_working_dirs = input.fetch(:cleanup_working_dirs)
       end
 
       def start
@@ -70,7 +71,7 @@ module Proxy::Ansible
 
       def close
         super
-        FileUtils.remove_entry(@root) if @tmp_working_dir && Dir.exist?(@root)
+        FileUtils.remove_entry(@root) if @tmp_working_dir && Dir.exist?(@root) && @cleanup_working_dirs
       end
 
       private
