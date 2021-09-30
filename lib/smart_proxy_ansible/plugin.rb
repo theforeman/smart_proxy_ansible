@@ -7,10 +7,10 @@ module Proxy
       plugin :ansible, Proxy::Ansible::VERSION
       default_settings :ansible_dir => Dir.home
                        # :working_dir => nil
+
       load_classes ::Proxy::Ansible::ConfigurationLoader
       load_validators :validate_settings => ::Proxy::Ansible::ValidateSettings
       validate :validate!, :validate_settings => nil
-
     end
   end
 end
