@@ -5,7 +5,7 @@ module Proxy
     # Implements the logic needed to read the roles and associated information
     class RolesReader
       class << self
-        DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'.freeze
+        DEFAULT_CONFIG_FILE = '/etc/foreman_proxy/ansible.cfg'.freeze
         DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'.freeze
         DEFAULT_COLLECTIONS_PATHS = '/etc/ansible/collections:/usr/share/ansible/collections'.freeze
 
