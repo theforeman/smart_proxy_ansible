@@ -80,7 +80,7 @@ module Proxy::Ansible
         logger.debug("[foreman_ansible] - parsing event file #{event_file}")
         begin
           event = JSON.parse(File.read(event_file))
-          if (hostname = event.dig('event_data', 'host'))
+          if hostname_for_event(event)
             handle_host_event(hostname, event)
           else
             handle_broadcast_data(event)
@@ -90,6 +90,17 @@ module Proxy::Ansible
           logger.error("[foreman_ansible] - Error parsing runner event at #{event_file}: #{e.class}: #{e.message}")
           logger.debug(e.backtrace.join("\n"))
         end
+      end
+
+      def hostname_for_event(event)
+        hostname = event.dig('event_data', 'host') || event.dig('event_data', 'remote_addr')
+        return nil if hostname.nil? || hostname.empty? || hostname == 'locahost'
+
+        unless @targets.key?(hostname)
+          logger.warn("handle_host_event: unknown host #{hostname} for event '#{event['event']}', broadcasting")
+          return nil
+        end
+        hostname
       end
 
       def handle_host_event(hostname, event)
