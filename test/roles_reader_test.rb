@@ -2,16 +2,16 @@
 
 require 'test_helper'
 require_relative '../lib/smart_proxy_ansible/roles_reader'
-
+require_relative '../lib/smart_proxy_ansible/reader_helper'
 # Tests for the Roles Reader service of ansible core,
 # this class simply reads roles from its path in ansible.cfg
 class RolesReaderTest < Minitest::Test
-  CONFIG_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_CONFIG_FILE
+  CONFIG_PATH = ::Proxy::Ansible::ReaderHelper.singleton_class::DEFAULT_CONFIG_FILE
   ROLES_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_ROLES_PATH
-  COLLECTIONS_PATHS = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_COLLECTIONS_PATHS
+  COLLECTIONS_PATHS = ::Proxy::Ansible::ReaderHelper.singleton_class::DEFAULT_COLLECTIONS_PATHS
 
   def self.expect_content_config(ansible_cfg_content)
-    Proxy::Ansible::RolesReader.expects(:path_from_config)
+    Proxy::Ansible::ReaderHelper.expects(:path_from_config)
                                .returns(ansible_cfg_content)
   end
 
@@ -24,7 +24,7 @@ class RolesReaderTest < Minitest::Test
 
     test 'returns default path if no roles_path defined' do
       assert_equal(ROLES_PATH,
-                   Proxy::Ansible::RolesReader.config_path(['#roles_path = thisiscommented!'], ROLES_PATH))
+                   Proxy::Ansible::ReaderHelper.config_path(['#roles_path = thisiscommented!'], ROLES_PATH))
     end
 
     test 'returns roles_path if one is defined' do
@@ -38,8 +38,8 @@ class RolesReaderTest < Minitest::Test
 
   describe '#list_roles' do
     test 'reads roles from paths' do
-      Proxy::Ansible::RolesReader.expects(:path_from_config).with('roles_path').returns(["roles_path = #{ROLES_PATH}"])
-      Proxy::Ansible::RolesReader.expects(:path_from_config).with('collections_paths').returns(["collections_paths = #{COLLECTIONS_PATHS}"])
+      Proxy::Ansible::ReaderHelper.expects(:path_from_config).with('roles_path').returns(["roles_path = #{ROLES_PATH}"])
+      Proxy::Ansible::ReaderHelper.expects(:path_from_config).with('collections_paths').returns(["collections_paths = #{COLLECTIONS_PATHS}"])
 
       ROLES_PATH.split(':').map do |path|
         Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
@@ -54,7 +54,7 @@ class RolesReaderTest < Minitest::Test
       roles_paths = '/mycustom/roles/path:/another/path'
       collections_paths = '/mycustom/collections/roles/path:/another/collections/path'
       Proxy::Ansible::RolesReader.expects(:roles_path).returns(roles_paths)
-      Proxy::Ansible::RolesReader.expects(:collections_paths).returns(collections_paths)
+      Proxy::Ansible::ReaderHelper.expects(:collections_paths).returns(collections_paths)
       collections_paths.split(':').map do |path|
         Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
       end

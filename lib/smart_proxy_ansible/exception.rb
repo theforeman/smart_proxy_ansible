@@ -38,5 +38,7 @@ module Proxy
     class ReadRolesException < Proxy::Ansible::Exception; end
     class ReadVariablesException < Proxy::Ansible::Exception; end
     class NotExistingWorkingDirException < Proxy::Ansible::Exception; end
+    class ReadPlaybooksNamesException < Proxy::Ansible::Exception; end
+    class ReadPlaybooksException < Proxy::Ansible::Exception; end
   end
 end
