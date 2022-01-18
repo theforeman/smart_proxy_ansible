@@ -1,6 +1,6 @@
 # Smart-proxy Ansible plugin
 
-Proxy plugin to make [foreman_ansible](https://github.com/theforeman/foreman_ansible) actions run in the proxy
+Proxy plugin to make [foreman_ansible](https://github.com/theforeman/foreman_ansible) actions run on the proxy.
 
 ## Compatibility
 
@@ -11,8 +11,8 @@ This plugin requires at least Foreman Proxy 2.3.
 ### Prerequisites
 
 We expect your proxy to also have
-[smart_proxy_dynflow](https://github.com/theforeman/smart_proxy_dynflow) 0.1.5
-at least, and [foreman-tasks-core](https://github.com/theforeman/foreman-tasks) as
+[smart_proxy_dynflow](https://github.com/theforeman/smart_proxy_dynflow) 0.5
+at least, and [smart_proxy_remote_execution_ssh](https://github.com/theforeman/smart_proxy_remote_execution_ssh) 0.4 as
 a gem requirement.
 
 ### Get the code
