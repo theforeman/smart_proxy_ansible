@@ -1,13 +1,13 @@
 require 'shellwords'
 require 'yaml'
 
-require 'smart_proxy_dynflow/runner/command'
+require 'smart_proxy_dynflow/runner/process_manager_command'
 require 'smart_proxy_dynflow/runner/base'
 require 'smart_proxy_dynflow/runner/parent'
 module Proxy::Ansible
   module Runner
     class AnsibleRunner < ::Proxy::Dynflow::Runner::Parent
-      include ::Proxy::Dynflow::Runner::Command
+      include ::Proxy::Dynflow::Runner::ProcessManagerCommand
       attr_reader :execution_timeout_interval, :command_pid
 
       def initialize(input, suspended_action:, id: nil)
