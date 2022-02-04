@@ -45,9 +45,12 @@ module Proxy::Ansible
       end
 
       def refresh
-        return unless super
+        super
+        @uuid ||= if (f = Dir["#{@root}/artifacts/*"].first)
+                    File.basename(f)
+                  end
+        return unless @uuid
         @counter ||= 1
-        @uuid ||= File.basename(Dir["#{@root}/artifacts/*"].first)
         job_event_dir = File.join(@root, 'artifacts', @uuid, 'job_events')
         loop do
           files = Dir["#{job_event_dir}/*.json"].map do |file|
