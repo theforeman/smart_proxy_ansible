@@ -34,6 +34,16 @@ module Proxy::Ansible
         start_ansible_runner
       end
 
+      def initialize_command(*command)
+        r, w = IO.pipe
+
+        @command_pid = spawn(*command, :out => w, :err => w, :in => '/dev/null')
+        @command_out = r
+        w.close
+      rescue Errno::ENOENT => e
+        publish_exception("Error running command '#{command.join(' ')}'", e)
+      end
+
       def refresh
         return unless super
         @counter ||= 1
