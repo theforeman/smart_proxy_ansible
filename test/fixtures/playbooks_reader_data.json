@@ -1,0 +1,19 @@
+
+{ "ansible_config": ["# config file for ansible -- https://ansible.com/\n",
+                    "# ===============================================\n",
+                    "\n",
+                   "interpreter_python = /usr/bin/python3\n",
+                  "\n",
+                    "callback_whitelist = foreman\n",
+                    "[callback_foreman]\n",
+                   "url = 'http://localhost:3000/'\n",
+                   "ssl_cert =\n",
+                    "ssl_key =\n",
+                  "verify_certs = false"],
+  "listings": ["/etc/ansible/collections/ansible_collections/xprazak2/forklift_collection/playbooks/upgrade.yml",
+              "/etc/ansible/collections/ansible_collections/xprazak2/forklift_collection/playbooks/freeipa_server.yml",
+              "/etc/ansible/collections/ansible_collections/xprazak2/forklift_collection/playbooks/foreman_provisioning.yml"] ,
+  "playbook1": "- hosts: all\n  become: true\n  vars:\n    libvirt_tftp: true\n  roles:\n    - foreman\n    - libvirt\n    - foreman_provisioning\n",
+  "playbook2": "- hosts: all\n  become: true\n  vars:\n    foreman_repositories_version: nightly\n    katello_repositories_version: nightly\n    foreman_installer_upgrade: True\n    foreman_repositories_environment: staging\n    katello_repositories_environment: staging\n    foreman_installer_scenario: katello\n  roles:\n    - foreman_server_repositories\n",
+  "playbook3": "---\n- hosts: all\n  become: true\n  roles:\n    - etc_hosts\n    - epel_repositories\n    - haveged\n    - update_os_packages\n    - freeipa_server\n"
+}
