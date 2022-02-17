@@ -24,7 +24,7 @@ module Proxy
             name = ReaderHelper.playbook_or_role_full_name(path)
             {
               name: name,
-              playbooks_content: File.readlines(path)
+              playbooks_content: File.read(path)
             } if playbooks_to_import.nil? || playbooks_to_import.include?(name)
           end.compact
         rescue Errno::ENOENT, Errno::EACCES => e
