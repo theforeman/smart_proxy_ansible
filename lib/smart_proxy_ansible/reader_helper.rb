@@ -32,7 +32,7 @@ module Proxy
 
         def playbook_or_role_full_name(path)
           parts = path.split('/')
-          playbook = parts.pop
+          playbook = parts.pop.sub(/\.ya?ml/, '')
           parts.pop
           collection = parts.pop
           author = parts.pop
