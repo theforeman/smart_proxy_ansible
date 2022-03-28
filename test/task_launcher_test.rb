@@ -25,7 +25,7 @@ module Proxy::Ansible
 
           it 'discards everything else' do
             _(result.keys).must_equal ['action_input']
-            _(result['action_input'].keys).must_equal ['name', :task_id]
+            _(result['action_input'].keys).must_equal ['name', :task_id, :runner_id]
           end
         end
       end
