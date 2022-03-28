@@ -10,8 +10,8 @@ module Proxy::Ansible
       include ::Proxy::Dynflow::Runner::Command
       attr_reader :execution_timeout_interval, :command_pid
 
-      def initialize(input, suspended_action:)
-        super input, :suspended_action => suspended_action
+      def initialize(input, suspended_action:, id: nil)
+        super input, :suspended_action => suspended_action, :id => id
         @inventory = rebuild_secrets(rebuild_inventory(input), input)
         action_input = input.values.first[:input][:action_input]
         @playbook = action_input[:script]
@@ -44,25 +44,10 @@ module Proxy::Ansible
         publish_exception("Error running command '#{command.join(' ')}'", e)
       end
 
-      def refresh
-        super
-        @uuid ||= if (f = Dir["#{@root}/artifacts/*"].first)
-                    File.basename(f)
-                  end
-        return unless @uuid
-        @counter ||= 1
-        job_event_dir = File.join(@root, 'artifacts', @uuid, 'job_events')
-        loop do
-          files = Dir["#{job_event_dir}/*.json"].map do |file|
-            num = File.basename(file)[/\A\d+/].to_i unless file.include?('partial')
-            [file, num]
-          end
-          files_with_nums = files.select { |(_, num)| num && num >= @counter }.sort_by(&:last)
-          break if files_with_nums.empty?
-          logger.debug("[foreman_ansible] - processing event files: #{files_with_nums.map(&:first).inspect}}")
-          files_with_nums.map(&:first).each { |event_file| handle_event_file(event_file) }
-          @counter = files_with_nums.last.last + 1
-        end
+      def run_refresh_output
+        logger.debug('refreshing runner on demand')
+        process_artifacts
+        generate_updates
       end
 
       def timeout
@@ -87,7 +72,32 @@ module Proxy::Ansible
         FileUtils.remove_entry(@root) if @tmp_working_dir && Dir.exist?(@root) && @cleanup_working_dirs
       end
 
+      def publish_exit_status(status)
+        process_artifacts
+        super
+      end
+
       private
+
+      def process_artifacts
+        @counter ||= 1
+        @uuid ||= if (f = Dir["#{@root}/artifacts/*"].first)
+                    File.basename(f)
+                  end
+        return unless @uuid
+        job_event_dir = File.join(@root, 'artifacts', @uuid, 'job_events')
+        loop do
+          files = Dir["#{job_event_dir}/*.json"].map do |file|
+            num = File.basename(file)[/\A\d+/].to_i unless file.include?('partial')
+            [file, num]
+          end
+          files_with_nums = files.select { |(_, num)| num && num >= @counter }.sort_by(&:last)
+          break if files_with_nums.empty?
+          logger.debug("[foreman_ansible] - processing event files: #{files_with_nums.map(&:first).inspect}}")
+          files_with_nums.map(&:first).each { |event_file| handle_event_file(event_file) }
+          @counter = files_with_nums.last.last + 1
+        end
+      end
 
       def handle_event_file(event_file)
         logger.debug("[foreman_ansible] - parsing event file #{event_file}")
