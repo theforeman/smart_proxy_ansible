@@ -34,16 +34,6 @@ module Proxy::Ansible
         start_ansible_runner
       end
 
-      def initialize_command(*command)
-        r, w = IO.pipe
-
-        @command_pid = spawn(*command, :out => w, :err => w, :in => '/dev/null')
-        @command_out = r
-        w.close
-      rescue Errno::ENOENT => e
-        publish_exception("Error running command '#{command.join(' ')}'", e)
-      end
-
       def run_refresh_output
         logger.debug('refreshing runner on demand')
         process_artifacts
@@ -60,7 +50,7 @@ module Proxy::Ansible
       end
 
       def kill
-        ::Process.kill('SIGTERM', @command_pid)
+        ::Process.kill('SIGTERM', @process_manager.pid)
         publish_exit_status(2)
         @inventory['all']['hosts'].each { |hostname| @exit_statuses[hostname] = 2 }
         broadcast_data('Timeout for execution passed, stopping the job', 'stderr')
