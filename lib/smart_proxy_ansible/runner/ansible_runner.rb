@@ -8,7 +8,7 @@ module Proxy::Ansible
   module Runner
     class AnsibleRunner < ::Proxy::Dynflow::Runner::Parent
       include ::Proxy::Dynflow::Runner::ProcessManagerCommand
-      attr_reader :execution_timeout_interval, :command_pid
+      attr_reader :execution_timeout_interval
 
       def initialize(input, suspended_action:, id: nil)
         super input, :suspended_action => suspended_action, :id => id
@@ -65,6 +65,11 @@ module Proxy::Ansible
       def publish_exit_status(status)
         process_artifacts
         super
+      end
+
+      def initialize_command(*command)
+        super
+        @process_manager.stdin.close unless @process_manager.done?
       end
 
       private
