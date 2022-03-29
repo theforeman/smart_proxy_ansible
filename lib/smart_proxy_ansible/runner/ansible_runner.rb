@@ -1,14 +1,14 @@
 require 'shellwords'
 require 'yaml'
 
-require 'smart_proxy_dynflow/runner/command'
+require 'smart_proxy_dynflow/runner/process_manager_command'
 require 'smart_proxy_dynflow/runner/base'
 require 'smart_proxy_dynflow/runner/parent'
 module Proxy::Ansible
   module Runner
     class AnsibleRunner < ::Proxy::Dynflow::Runner::Parent
-      include ::Proxy::Dynflow::Runner::Command
-      attr_reader :execution_timeout_interval, :command_pid
+      include ::Proxy::Dynflow::Runner::ProcessManagerCommand
+      attr_reader :execution_timeout_interval
 
       def initialize(input, suspended_action:, id: nil)
         super input, :suspended_action => suspended_action, :id => id
@@ -34,16 +34,6 @@ module Proxy::Ansible
         start_ansible_runner
       end
 
-      def initialize_command(*command)
-        r, w = IO.pipe
-
-        @command_pid = spawn(*command, :out => w, :err => w, :in => '/dev/null')
-        @command_out = r
-        w.close
-      rescue Errno::ENOENT => e
-        publish_exception("Error running command '#{command.join(' ')}'", e)
-      end
-
       def run_refresh_output
         logger.debug('refreshing runner on demand')
         process_artifacts
@@ -60,7 +50,7 @@ module Proxy::Ansible
       end
 
       def kill
-        ::Process.kill('SIGTERM', @command_pid)
+        ::Process.kill('SIGTERM', @process_manager.pid)
         publish_exit_status(2)
         @inventory['all']['hosts'].each { |hostname| @exit_statuses[hostname] = 2 }
         broadcast_data('Timeout for execution passed, stopping the job', 'stderr')
@@ -75,6 +65,11 @@ module Proxy::Ansible
       def publish_exit_status(status)
         process_artifacts
         super
+      end
+
+      def initialize_command(*command)
+        super
+        @process_manager.stdin.close unless @process_manager.done?
       end
 
       private
