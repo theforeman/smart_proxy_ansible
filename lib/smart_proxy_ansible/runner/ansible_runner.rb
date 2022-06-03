@@ -80,7 +80,7 @@ module Proxy::Ansible
         logger.debug("[foreman_ansible] - parsing event file #{event_file}")
         begin
           event = JSON.parse(File.read(event_file))
-          if hostname_for_event(event)
+          if (hostname = hostname_for_event(event))
             handle_host_event(hostname, event)
           else
             handle_broadcast_data(event)
