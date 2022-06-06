@@ -94,7 +94,7 @@ module Proxy::Ansible
 
       def hostname_for_event(event)
         hostname = event.dig('event_data', 'host') || event.dig('event_data', 'remote_addr')
-        return nil if hostname.nil? || hostname.empty? || hostname == 'locahost'
+        return nil if hostname.nil? || hostname.empty?
 
         unless @targets.key?(hostname)
           logger.warn("handle_host_event: unknown host #{hostname} for event '#{event['event']}', broadcasting")
