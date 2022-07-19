@@ -65,6 +65,7 @@ module Proxy::Ansible
       def publish_exit_status(status)
         process_artifacts
         super
+        @targets.each_key { |host| publish_exit_status_for(host, status) } if status != 0
       end
 
       def initialize_command(*command)
