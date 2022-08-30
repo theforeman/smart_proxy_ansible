@@ -186,10 +186,20 @@ module Proxy::Ansible
       def start_ansible_runner
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
-        command = [env, 'ansible-runner', 'run', @root, '-p', 'playbook.yml']
+        command = ['ansible-runner', 'run', @root, '-p', 'playbook.yml']
         command << '--cmdline' << cmdline unless cmdline.nil?
         command << verbosity if verbose?
-        initialize_command(*command)
+
+        ansible_env = Proxy::Ansible::Plugin.settings[:ansible_environment_file].shellescape
+        init = <<~EOF
+          #!/bin/sh
+          [ -f #{ansible_env} ] && source #{ansible_env}
+          exec #{command.map(&:shellescape).join(' ')}
+        EOF
+        init_path = File.join(@root, 'init.sh')
+        File.write(init_path, init, { perm: 0o0755 })
+
+        initialize_command(env, init_path)
         logger.debug("[foreman_ansible] - Running command '#{command.join(' ')}'")
       end
 

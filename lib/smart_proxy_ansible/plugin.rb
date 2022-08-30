@@ -5,7 +5,8 @@ module Proxy
       rackup_path File.expand_path('http_config.ru', __dir__)
       settings_file 'ansible.yml'
       plugin :ansible, Proxy::Ansible::VERSION
-      default_settings :ansible_dir => Dir.home
+      default_settings :ansible_dir => Dir.home,
+                       :ansible_environment_file => '/etc/foreman-proxy/ansible.env'
                        # :working_dir => nil
 
       load_classes ::Proxy::Ansible::ConfigurationLoader

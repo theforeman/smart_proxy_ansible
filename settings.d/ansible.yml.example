@@ -1,3 +1,4 @@
 ---
 :enabled: true
 :working_dir: '~/.foreman-ansible'
+# :ansible_environment_file: /etc/foreman-proxy/ansible.env
