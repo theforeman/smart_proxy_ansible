@@ -11,7 +11,7 @@ module Proxy::Ansible
       attr_reader :execution_timeout_interval
 
       # To make this overridable in development
-      ENVIRONMENT_WRAPPER = ENV['SMART_PROXY_ANSIBLE_ENVIRONMENT_WRAPPER'] || '/usr/libexec/ansible-runner-environment'
+      ENVIRONMENT_WRAPPER = ENV['SMART_PROXY_ANSIBLE_ENVIRONMENT_WRAPPER'] || '/usr/libexec/foreman-proxy/ansible-runner-environment'
 
       def initialize(input, suspended_action:, id: nil)
         super input, :suspended_action => suspended_action, :id => id
