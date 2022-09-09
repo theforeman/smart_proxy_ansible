@@ -15,9 +15,9 @@ module Proxy
             begin
               loaded_yaml = YAML.load_file(role_file)
             rescue Psych::SyntaxError
-              raise ReadVariablesException.new "#{role_file} is not YAML file"
+              raise ReadVariablesException, "#{role_file} is not YAML file"
             end
-            raise ReadVariablesException.new "Could not parse YAML file: #{role_file}" unless loaded_yaml.is_a? Hash
+            raise ReadVariablesException, "Could not parse YAML file: #{role_file}" unless loaded_yaml.is_a? Hash
 
             memo.merge loaded_yaml
           end
