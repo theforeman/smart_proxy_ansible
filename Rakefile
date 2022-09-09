@@ -2,6 +2,7 @@
 
 require 'rake'
 require 'rake/testtask'
+require 'rubocop/rake_task'
 
 begin
   require 'bundler/gem_tasks'
@@ -9,8 +10,10 @@ rescue LoadError
   # This is optional
 end
 
+RuboCop::RakeTask.new
+
 desc 'Default: run unit tests.'
-task default: :test
+task default: %i[rubocop test]
 
 desc 'Test Ansible plugin'
 Rake::TestTask.new(:test) do |t|

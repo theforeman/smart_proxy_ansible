@@ -5,7 +5,7 @@ module Proxy
     # Taken from Foreman core, this class creates an error code for any
     # exception
     class Exception < ::StandardError
-      def initialize(message, *params)
+      def initialize(message, *params) # rubocop:todo Lint/MissingSuper
         @message = message
         @params = params
       end
@@ -16,7 +16,7 @@ module Proxy
         basename = classname.split(':').last
         class_hash = Zlib.crc32(basename) % 100
         msg_hash = Zlib.crc32(message) % 10_000
-        format 'ERF%02d-%04d', class_hash, msg_hash
+        format 'ERF%02d-%04d', class_hash, msg_hash # rubocop:todo Style/FormatStringToken
       end
 
       def code

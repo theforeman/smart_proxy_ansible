@@ -9,6 +9,13 @@ group :development do
   gem 'pry-byebug'
 end
 
+group :rubocop do
+  gem 'rubocop', '~> 1.28.0', require: false
+  gem 'rubocop-minitest', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rake', require: false
+end
+
 group :test do
   gem 'minitest', require: false
   gem 'minitest-reporters', '~> 1.4', require: false
