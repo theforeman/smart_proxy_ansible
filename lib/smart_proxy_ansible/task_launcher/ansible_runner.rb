@@ -27,7 +27,8 @@ module Proxy::Ansible
       # apart when debugging
       def transform_input(input)
         action_input = super['action_input']
-        { 'action_input' => { 'name' => action_input['name'], :task_id => action_input[:task_id], :runner_id => action_input[:runner_id] } }
+        { 'action_input' => { 'name' => action_input['name'], :task_id => action_input[:task_id],
+                              :runner_id => action_input[:runner_id] } }
       end
     end
   end

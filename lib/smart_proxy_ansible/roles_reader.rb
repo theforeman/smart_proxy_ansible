@@ -11,7 +11,9 @@ module Proxy
 
         def list_roles
           roles = roles_path.split(':').map { |path| read_roles(path) }.flatten
-          collection_roles = ReaderHelper.collections_paths.split(':').map { |path| read_collection_roles(path) }.flatten
+          collection_roles = ReaderHelper.collections_paths.split(':').map do |path|
+            read_collection_roles(path)
+          end.flatten
           roles + collection_roles
         end
 
