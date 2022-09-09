@@ -24,10 +24,12 @@ module Proxy
         def read_collection_playbooks(collections_path, playbooks_to_import = nil)
           Dir.glob("#{collections_path}/ansible_collections/*/*/playbooks/*").map do |path|
             name = ReaderHelper.playbook_or_role_full_name(path)
+            next unless playbooks_to_import.nil? || playbooks_to_import.include?(name)
+
             {
               name: name,
               playbooks_content: File.read(path)
-            } if playbooks_to_import.nil? || playbooks_to_import.include?(name)
+            }
           end.compact
         rescue Errno::ENOENT, Errno::EACCES => e
           message = "Could not read Ansible playbooks #{collections_path} - #{e.message}"
