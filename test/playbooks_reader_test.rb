@@ -4,7 +4,6 @@ require_relative '../lib/smart_proxy_ansible/exception'
 require_relative '../lib/smart_proxy_ansible/reader_helper'
 
 class PlaybooksReaderTest < Minitest::Test
-
   describe 'playbooks method' do
     let(:fixtures) { JSON.parse(File.read(File.join(__dir__, 'fixtures/playbooks_reader_data.json'))) }
     let(:ansible_config) { fixtures['ansible_config'] }
