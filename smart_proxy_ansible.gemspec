@@ -11,9 +11,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['inecas@redhat.com', 'dlobatog@redhat.com']
   gem.homepage      = 'https://github.com/theforeman/smart_proxy_ansible'
   gem.summary       = 'Smart-Proxy Ansible plugin'
-  gem.description   = <<-EOS
-    Smart-Proxy ansible plugin
-  EOS
+  gem.description   = 'Smart-Proxy ansible plugin'
 
   gem.files            = Dir['bundler.d/ansible.rb',
                              'settings.d/**/*',
