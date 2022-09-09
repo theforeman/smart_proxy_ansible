@@ -15,7 +15,7 @@ module Minitest
         defined = method_defined? test_name
         fail "#{test_name} is already defined in #{self}" if defined
 
-        if block_given?
+        if block
           define_method(test_name, &block)
         else
           define_method(test_name) do
