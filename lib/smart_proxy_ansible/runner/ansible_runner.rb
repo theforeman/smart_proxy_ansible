@@ -229,9 +229,7 @@ module Proxy::Ansible
       end
 
       def log_event(description, event)
-        # TODO: replace this ugly code with block variant once https://github.com/Dynflow/dynflow/pull/323
-        # arrives in production
-        logger.debug("[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}") if logger.level <= ::Logger::DEBUG
+        logger.debug { "[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}" }
       end
 
       # Each per-host task has inventory only for itself, we must
