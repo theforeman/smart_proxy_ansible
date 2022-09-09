@@ -3,6 +3,9 @@ require 'minitest/spec'
 require 'mocha/minitest'
 require 'smart_proxy_for_testing'
 
+require "minitest/reporters"
+Minitest::Reporters.use!
+
 module Minitest
   # Modifications to allow a 'test 'nameoftest' do' syntax
   class Test
