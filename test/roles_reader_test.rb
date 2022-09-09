@@ -12,7 +12,7 @@ class RolesReaderTest < Minitest::Test
 
   def self.expect_content_config(ansible_cfg_content)
     Proxy::Ansible::ReaderHelper.expects(:path_from_config)
-                               .returns(ansible_cfg_content)
+                                .returns(ansible_cfg_content)
   end
 
   describe '#roles_path' do
