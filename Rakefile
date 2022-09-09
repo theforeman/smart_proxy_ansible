@@ -6,6 +6,7 @@ require 'rake/testtask'
 begin
   require 'bundler/gem_tasks'
 rescue LoadError
+  # This is optional
 end
 
 desc 'Default: run unit tests.'
