@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'exception'
 
 module Proxy
@@ -5,7 +7,7 @@ module Proxy
     # Implements the logic needed to read the roles and associated information
     class RolesReader
       class << self
-        DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'.freeze
+        DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'
 
         def list_roles
           roles = roles_path.split(':').map { |path| read_roles(path) }.flatten

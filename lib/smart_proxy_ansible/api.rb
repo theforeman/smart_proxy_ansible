@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # API endpoints. Most of the code should be calling other classes,

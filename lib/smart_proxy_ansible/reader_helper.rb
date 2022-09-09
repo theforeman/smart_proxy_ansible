@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # Helper for Playbooks Reader
     class ReaderHelper
       class << self
-        DEFAULT_COLLECTIONS_PATHS = '/etc/ansible/collections:/usr/share/ansible/collections'.freeze
-        DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'.freeze
+        DEFAULT_COLLECTIONS_PATHS = '/etc/ansible/collections:/usr/share/ansible/collections'
+        DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'
 
         def collections_paths
           config_path(path_from_config('collections_paths'), DEFAULT_COLLECTIONS_PATHS)

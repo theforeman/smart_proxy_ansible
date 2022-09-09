@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fileutils'
 require 'smart_proxy_dynflow/task_launcher/abstract'
 require 'smart_proxy_dynflow/task_launcher/batch'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # Calls for the smart-proxy API to register the plugin
