@@ -16,6 +16,7 @@ module Proxy
               raise ReadVariablesException.new "#{role_file} is not YAML file"
             end
             raise ReadVariablesException.new "Could not parse YAML file: #{role_file}" unless loaded_yaml.is_a? Hash
+
             memo.merge loaded_yaml
           end
         end

@@ -81,6 +81,7 @@ module Proxy::Ansible
                     File.basename(f)
                   end
         return unless @uuid
+
         job_event_dir = File.join(@root, 'artifacts', @uuid, 'job_events')
         loop do
           files = Dir["#{job_event_dir}/*.json"].map do |file|
@@ -89,6 +90,7 @@ module Proxy::Ansible
           end
           files_with_nums = files.select { |(_, num)| num && num >= @counter }.sort_by(&:last)
           break if files_with_nums.empty?
+
           logger.debug("[foreman_ansible] - processing event files: #{files_with_nums.map(&:first).inspect}}")
           files_with_nums.map(&:first).each { |event_file| handle_event_file(event_file) }
           @counter = files_with_nums.last.last + 1
@@ -197,6 +199,7 @@ module Proxy::Ansible
       def cmdline
         cmd_args = [tags_cmd, check_cmd].reject(&:empty?)
         return nil unless cmd_args.any?
+
         cmd_args.join(' ')
       end
 
@@ -253,6 +256,7 @@ module Proxy::Ansible
 
       def working_dir
         return @root if @root
+
         dir = Proxy::Ansible::Plugin.settings[:working_dir]
         @tmp_working_dir = true
         if dir.nil?
