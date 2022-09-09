@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # API endpoints. Most of the code should be calling other classes,
@@ -40,11 +42,13 @@ module Proxy
 
       def extract_variables(role_name)
         variables = {}
-        role_name_parts = role_name.split('.')
-        if role_name_parts.count == 3
+        parts = role_name.split('.')
+        if parts.count == 3
           ReaderHelper.collections_paths.split(':').each do |path|
-            variables[role_name] = VariablesExtractor
-                                   .extract_variables("#{path}/ansible_collections/#{role_name_parts[0]}/#{role_name_parts[1]}/roles/#{role_name_parts[2]}") if variables[role_name].nil? || variables[role_name].empty?
+            if variables[role_name].nil? || variables[role_name].empty?
+              role_path = "#{path}/ansible_collections/#{parts[0]}/#{parts[1]}/roles/#{parts[2]}"
+              variables[role_name] = VariablesExtractor.extract_variables(role_path)
+            end
           end
         else
           RolesReader.roles_path.split(':').each do |path|

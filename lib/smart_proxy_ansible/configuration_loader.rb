@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Proxy::Ansible
   class ConfigurationLoader
     def load_classes

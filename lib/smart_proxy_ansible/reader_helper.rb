@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # Helper for Playbooks Reader
     class ReaderHelper
       class << self
-        DEFAULT_COLLECTIONS_PATHS = '/etc/ansible/collections:/usr/share/ansible/collections'.freeze
-        DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'.freeze
+        DEFAULT_COLLECTIONS_PATHS = '/etc/ansible/collections:/usr/share/ansible/collections'
+        DEFAULT_CONFIG_FILE = '/etc/ansible/ansible.cfg'
 
         def collections_paths
           config_path(path_from_config('collections_paths'), DEFAULT_COLLECTIONS_PATHS)
@@ -21,9 +23,7 @@ module Proxy
         end
 
         def path_from_config(config_key)
-          File.readlines(DEFAULT_CONFIG_FILE).select do |line|
-            line =~ /^\s*#{config_key}/
-          end
+          File.readlines(DEFAULT_CONFIG_FILE).grep(/^\s*#{config_key}/)
         rescue Errno::ENOENT, Errno::EACCES => e
           RolesReader.logger.debug(e.backtrace)
           message = "Could not read Ansible config file #{DEFAULT_CONFIG_FILE} - #{e.message}"

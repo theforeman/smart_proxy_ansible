@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # Calls for the smart-proxy API to register the plugin
@@ -6,7 +8,6 @@ module Proxy
       settings_file 'ansible.yml'
       plugin :ansible, Proxy::Ansible::VERSION
       default_settings :ansible_dir => Dir.home
-                       # :working_dir => nil
 
       load_classes ::Proxy::Ansible::ConfigurationLoader
       load_validators :validate_settings => ::Proxy::Ansible::ValidateSettings

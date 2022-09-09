@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 require_relative '../lib/smart_proxy_ansible/playbooks_reader'
 require_relative '../lib/smart_proxy_ansible/exception'
 require_relative '../lib/smart_proxy_ansible/reader_helper'
 
 class PlaybooksReaderTest < Minitest::Test
-
   describe 'playbooks method' do
     let(:fixtures) { JSON.parse(File.read(File.join(__dir__, 'fixtures/playbooks_reader_data.json'))) }
     let(:ansible_config) { fixtures['ansible_config'] }
@@ -70,8 +71,8 @@ class PlaybooksReaderTest < Minitest::Test
       res = Proxy::Ansible::PlaybooksReader.playbooks_names
       assert_equal Array, res.class
       assert_equal 2, res.count
-      assert not(res.first.match(/.ya?ml/))
-      assert not(res.last.match(/.ya?ml/))
+      refute_match res.first, /.ya?ml/
+      refute_match res.last, /.ya?ml/
     end
   end
 end

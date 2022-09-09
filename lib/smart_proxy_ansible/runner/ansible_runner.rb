@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shellwords'
 require 'yaml'
 
@@ -81,6 +83,7 @@ module Proxy::Ansible
                     File.basename(f)
                   end
         return unless @uuid
+
         job_event_dir = File.join(@root, 'artifacts', @uuid, 'job_events')
         loop do
           files = Dir["#{job_event_dir}/*.json"].map do |file|
@@ -89,6 +92,7 @@ module Proxy::Ansible
           end
           files_with_nums = files.select { |(_, num)| num && num >= @counter }.sort_by(&:last)
           break if files_with_nums.empty?
+
           logger.debug("[foreman_ansible] - processing event files: #{files_with_nums.map(&:first).inspect}}")
           files_with_nums.map(&:first).each { |event_file| handle_event_file(event_file) }
           @counter = files_with_nums.last.last + 1
@@ -124,7 +128,7 @@ module Proxy::Ansible
 
       def handle_host_event(hostname, event)
         log_event("for host: #{hostname.inspect}", event)
-        publish_data_for(hostname, event['stdout'] + "\n", 'stdout') if event['stdout']
+        publish_data_for(hostname, "#{event['stdout']}\n", 'stdout') if event['stdout']
         case event['event']
         when 'runner_on_ok'
           publish_exit_status_for(hostname, 0) if @exit_statuses[hostname].nil?
@@ -151,7 +155,7 @@ module Proxy::Ansible
             end
           end
         else
-          broadcast_data(event['stdout'] + "\n", 'stdout')
+          broadcast_data("#{event['stdout']}\n", 'stdout')
         end
       end
 
@@ -197,6 +201,7 @@ module Proxy::Ansible
       def cmdline
         cmd_args = [tags_cmd, check_cmd].reject(&:empty?)
         return nil unless cmd_args.any?
+
         cmd_args.join(' ')
       end
 
@@ -210,7 +215,7 @@ module Proxy::Ansible
       end
 
       def verbosity
-        '-' + 'v' * @verbosity_level.to_i
+        "-#{'v' * @verbosity_level.to_i}"
       end
 
       def verbose?
@@ -229,9 +234,7 @@ module Proxy::Ansible
       end
 
       def log_event(description, event)
-        # TODO: replace this ugly code with block variant once https://github.com/Dynflow/dynflow/pull/323
-        # arrives in production
-        logger.debug("[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}") if logger.level <= ::Logger::DEBUG
+        logger.debug { "[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}" }
       end
 
       # Each per-host task has inventory only for itself, we must
@@ -255,6 +258,7 @@ module Proxy::Ansible
 
       def working_dir
         return @root if @root
+
         dir = Proxy::Ansible::Plugin.settings[:working_dir]
         @tmp_working_dir = true
         if dir.nil?
