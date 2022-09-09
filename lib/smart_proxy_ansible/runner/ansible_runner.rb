@@ -213,7 +213,7 @@ module Proxy::Ansible
       end
 
       def verbosity
-        '-' + 'v' * @verbosity_level.to_i
+        '-' + ('v' * @verbosity_level.to_i)
       end
 
       def verbose?
