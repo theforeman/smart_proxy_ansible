@@ -69,8 +69,8 @@ class PlaybooksReaderTest < Minitest::Test
       res = Proxy::Ansible::PlaybooksReader.playbooks_names
       assert_equal Array, res.class
       assert_equal 2, res.count
-      assert not(res.first.match(/.ya?ml/))
-      assert not(res.last.match(/.ya?ml/))
+      refute_match res.first, /.ya?ml/
+      refute_match res.last, /.ya?ml/
     end
   end
 end
