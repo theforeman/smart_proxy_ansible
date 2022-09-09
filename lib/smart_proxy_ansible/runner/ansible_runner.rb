@@ -128,7 +128,7 @@ module Proxy::Ansible
 
       def handle_host_event(hostname, event)
         log_event("for host: #{hostname.inspect}", event)
-        publish_data_for(hostname, event['stdout'] + "\n", 'stdout') if event['stdout']
+        publish_data_for(hostname, "#{event['stdout']}\n", 'stdout') if event['stdout']
         case event['event']
         when 'runner_on_ok'
           publish_exit_status_for(hostname, 0) if @exit_statuses[hostname].nil?
@@ -155,7 +155,7 @@ module Proxy::Ansible
             end
           end
         else
-          broadcast_data(event['stdout'] + "\n", 'stdout')
+          broadcast_data("#{event['stdout']}\n", 'stdout')
         end
       end
 
@@ -215,7 +215,7 @@ module Proxy::Ansible
       end
 
       def verbosity
-        '-' + ('v' * @verbosity_level.to_i)
+        "-#{'v' * @verbosity_level.to_i}"
       end
 
       def verbose?
