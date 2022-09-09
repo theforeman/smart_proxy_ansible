@@ -23,9 +23,7 @@ module Proxy
         end
 
         def path_from_config(config_key)
-          File.readlines(DEFAULT_CONFIG_FILE).select do |line|
-            line =~ /^\s*#{config_key}/
-          end
+          File.readlines(DEFAULT_CONFIG_FILE).grep(/^\s*#{config_key}/)
         rescue Errno::ENOENT, Errno::EACCES => e
           RolesReader.logger.debug(e.backtrace)
           message = "Could not read Ansible config file #{DEFAULT_CONFIG_FILE} - #{e.message}"
