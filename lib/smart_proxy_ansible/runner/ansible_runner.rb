@@ -189,7 +189,7 @@ module Proxy::Ansible
       def start_ansible_runner
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
-        env['ANSIBLE_ENVIRONMENT_FILE'] = Proxy::Ansible::Plugin.settings[:ansible_environment_file]
+        env['SMART_PROXY_ANSIBLE_ENVIRONMENT_FILE'] = Proxy::Ansible::Plugin.settings[:ansible_environment_file]
         command = ['ansible-runner', 'run', @root, '-p', 'playbook.yml']
         command << '--cmdline' << cmdline unless cmdline.nil?
         command << verbosity if verbose?
