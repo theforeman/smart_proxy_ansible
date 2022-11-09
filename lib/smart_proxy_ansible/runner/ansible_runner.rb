@@ -10,6 +10,9 @@ module Proxy::Ansible
       include ::Proxy::Dynflow::Runner::ProcessManagerCommand
       attr_reader :execution_timeout_interval
 
+      # To make this overridable in development
+      ENVIRONMENT_WRAPPER = ENV['SMART_PROXY_ANSIBLE_ENVIRONMENT_WRAPPER'] || '/usr/libexec/foreman-proxy/ansible-runner-environment'
+
       def initialize(input, suspended_action:, id: nil)
         super input, :suspended_action => suspended_action, :id => id
         @inventory = rebuild_secrets(rebuild_inventory(input), input)
@@ -187,10 +190,12 @@ module Proxy::Ansible
       def start_ansible_runner
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
-        command = [env, 'ansible-runner', 'run', @root, '-p', 'playbook.yml']
+        env['SMART_PROXY_ANSIBLE_ENVIRONMENT_FILE'] = Proxy::Ansible::Plugin.settings[:ansible_environment_file]
+        command = ['ansible-runner', 'run', @root, '-p', 'playbook.yml']
         command << '--cmdline' << cmdline unless cmdline.nil?
         command << verbosity if verbose?
-        initialize_command(*command)
+
+        initialize_command(env, ENVIRONMENT_WRAPPER, *command)
         logger.debug("[foreman_ansible] - Running command '#{command.join(' ')}'")
       end
 

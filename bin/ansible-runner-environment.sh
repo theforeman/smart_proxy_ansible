@@ -1,0 +1,4 @@
+#!/bin/sh
+
+[ -f "$SMART_PROXY_ANSIBLE_ENVIRONMENT_FILE" ] && source "$SMART_PROXY_ANSIBLE_ENVIRONMENT_FILE"
+exec "$@"
