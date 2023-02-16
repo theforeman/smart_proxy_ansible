@@ -25,9 +25,9 @@ module Proxy
             line =~ /^\s*#{config_key}/
           end
         rescue Errno::ENOENT, Errno::EACCES => e
-          RolesReader.logger.debug(e.backtrace)
-          message = "Could not read Ansible config file #{DEFAULT_CONFIG_FILE} - #{e.message}"
-          raise ReadConfigFileException.new(message), message
+          message = "Could not read Ansible config file #{DEFAULT_CONFIG_FILE}, using defaults - #{e.message}"
+          RolesReader.logger.info(message)
+          []
         end
 
         def playbook_or_role_full_name(path)

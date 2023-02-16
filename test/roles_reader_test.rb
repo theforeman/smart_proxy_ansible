@@ -89,20 +89,30 @@ class RolesReaderTest < Minitest::Test
     end
 
     describe 'with unreadable config' do
-      test 'handles "No such file or dir" with exception' do
-        File.expects(:readlines).with(CONFIG_PATH).raises(Errno::ENOENT)
-        ex = assert_raises(Proxy::Ansible::ReadConfigFileException) do
-          Proxy::Ansible::RolesReader.list_roles
+      test 'handles "No such file or directory" by using defaults' do
+        File.expects(:readlines).times(2).with(CONFIG_PATH).raises(Errno::ENOENT)
+
+        ROLES_PATH.split(':').map do |path|
+          Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
         end
-        assert_match(/Could not read Ansible config file/, ex.message)
+        COLLECTIONS_PATHS.split(':').map do |path|
+          Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
+        end
+
+        Proxy::Ansible::RolesReader.list_roles
       end
 
-      test 'raises error if the roles path is not readable' do
-        File.expects(:readlines).with(CONFIG_PATH).raises(Errno::EACCES)
-        ex = assert_raises(Proxy::Ansible::ReadConfigFileException) do
-          Proxy::Ansible::RolesReader.list_roles
+      test 'handles "Permission denied" by using defaults' do
+        File.expects(:readlines).times(2).with(CONFIG_PATH).raises(Errno::EACCES)
+
+        ROLES_PATH.split(':').map do |path|
+          Proxy::Ansible::RolesReader.expects(:read_roles).with(path)
         end
-        assert_match(/Could not read Ansible config file/, ex.message)
+        COLLECTIONS_PATHS.split(':').map do |path|
+          Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
+        end
+
+        Proxy::Ansible::RolesReader.list_roles
       end
     end
   end
