@@ -99,6 +99,8 @@ class RolesReaderTest < Minitest::Test
           Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
         end
 
+        Proxy::Ansible::RolesReader.logger.expects(:info).with("Could not read Ansible config file /etc/ansible/ansible.cfg, using defaults - No such file or directory").at_least_once
+
         Proxy::Ansible::RolesReader.list_roles
       end
 
@@ -111,6 +113,8 @@ class RolesReaderTest < Minitest::Test
         COLLECTIONS_PATHS.split(':').map do |path|
           Proxy::Ansible::RolesReader.expects(:read_collection_roles).with(path)
         end
+
+        Proxy::Ansible::RolesReader.logger.expects(:warn).with("Could not read Ansible config file /etc/ansible/ansible.cfg, using defaults - Permission denied").at_least_once
 
         Proxy::Ansible::RolesReader.list_roles
       end
