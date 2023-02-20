@@ -26,7 +26,11 @@ module Proxy
           end
         rescue Errno::ENOENT, Errno::EACCES => e
           message = "Could not read Ansible config file #{DEFAULT_CONFIG_FILE}, using defaults - #{e.message}"
-          RolesReader.logger.info(message)
+          if e.is_a?(Errno::ENOENT)
+            RolesReader.logger.info(message)
+          else
+            RolesReader.logger.warn(message)
+          end
           []
         end
 
