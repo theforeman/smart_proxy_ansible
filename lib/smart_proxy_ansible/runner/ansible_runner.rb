@@ -68,7 +68,7 @@ module Proxy::Ansible
       def publish_exit_status(status)
         process_artifacts
         super
-        @targets.each_key { |host| publish_exit_status_for(host, status) } if status != 0
+        @targets.each_key { |host| publish_exit_status_for(host, @exit_statuses[host]) } if status != 0
       end
 
       def initialize_command(*command)
@@ -155,6 +155,13 @@ module Proxy::Ansible
           end
         else
           broadcast_data(event['stdout'] + "\n", 'stdout')
+        end
+
+        # If the run ends early due to an error - fail all other tasks
+        if event['event'] == 'error'
+          @outputs.keys.select { |key| key.is_a? String }.each do |host|
+            @exit_statuses[host] = 4 if @exit_statuses[host].to_i == 0
+          end
         end
       end
 
