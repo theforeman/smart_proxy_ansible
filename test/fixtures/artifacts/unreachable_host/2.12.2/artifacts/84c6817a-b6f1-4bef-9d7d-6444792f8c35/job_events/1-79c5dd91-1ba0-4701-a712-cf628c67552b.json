@@ -1,0 +1,1 @@
+{"event": "verbose", "uuid": "79c5dd91-1ba0-4701-a712-cf628c67552b", "counter": 1, "stdout": "\u001b[0;35m[DEPRECATION WARNING]: [defaults]callback_whitelist option, normalizing names \u001b[0m", "start_line": 0, "end_line": 1, "runner_ident": "84c6817a-b6f1-4bef-9d7d-6444792f8c35", "created": "2023-03-14T13:32:51.001681"}

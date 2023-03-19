@@ -48,6 +48,58 @@ module Proxy::Ansible
           assert_equal 'iamroot', host_vars['ansible_become_password']
         end
       end
+
+      describe '#publish_exit_status' do
+        let(:ansible_versions) { ['2.12.2', '2.13.3'] }
+        let(:suspended_action) { ::Dynflow::Action::Suspended.allocate }
+        let(:artifacts_path) { File.join(__dir__, 'fixtures/artifacts') }
+        let(:host1) { 'rhel8-new-machine-nofar.example.com' }
+        let(:host2) { 'rhel9-nofar-new-machine.example.com' }
+
+        describe 'when running Ansible roles on multiple hosts' do
+          # Helper method to create an AnsibleRunner instance for a given test
+          def create_runner(test_name, version)
+            action_input = JSON.parse(File.read("#{artifacts_path}/#{test_name}/action_input.json"))
+            runner = ::Proxy::Ansible::Runner::AnsibleRunner.new(Dynflow::Utils::IndifferentHash.new(action_input), suspended_action: suspended_action)
+            runner.instance_variable_set('@root', "#{artifacts_path}/#{test_name}/#{version}")
+            runner
+          end
+
+          def run_test(test_name, version, exit_statuses)
+            runner = create_runner(test_name, version)
+
+            # TODO: replace the second argument with the real status here
+            runner.send(:publish_exit_status, 4)
+
+            exit_statuses.each do |host, status|
+              assert runner.instance_variable_get('@exit_statuses').key?(host), "Missing exit status for host '#{host}'"
+              assert_equal runner.instance_variable_get('@exit_statuses')[host], status,
+                           "Incorrect exit status for host '#{host}': expected #{status}, got #{runner.instance_variable_get('@exit_statuses')[host]}"
+            end
+          end
+
+          it 'sets correct exit status when one host is unreachable' do
+            exit_statuses = { host1 => 0, host2 => 1 }
+            ansible_versions.each do |version|
+              run_test('unreachable_host', version, exit_statuses)
+            end
+          end
+
+          it 'sets correct exit status when one host has a failed role' do
+            exit_statuses = { host1 => 2, host2 => 0 }
+            ansible_versions.each do |version|
+              run_test('failed_role', version, exit_statuses)
+            end
+          end
+
+          it 'sets correct exit status when one host has a nonexisting role' do
+            exit_statuses = { host1 => 0, host2 => 4 }
+            ansible_versions.each do |version|
+              run_test('nonexisting_role', version, exit_statuses)
+            end
+          end
+        end
+      end
     end
   end
 end
