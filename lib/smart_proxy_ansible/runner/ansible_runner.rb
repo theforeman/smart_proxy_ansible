@@ -167,15 +167,10 @@ module Proxy::Ansible
       end
 
       def write_inventory
-        path = File.join(@root, 'inventory', 'hosts')
-        data_path = File.join(@root, 'data')
-        inventory_script = <<~INVENTORY_SCRIPT
-          #!/bin/sh
-          cat #{::Shellwords.escape data_path}
-        INVENTORY_SCRIPT
-        File.write(path, inventory_script)
-        File.write(data_path, JSON.dump(@inventory))
-        File.chmod(0o0755, path)
+        File.open(File.join(@root, 'inventory', 'hosts.json'), 'w') do |file|
+          file.chmod(0o0640)
+          file.write(JSON.dump(@inventory))
+        end
       end
 
       def write_playbook
@@ -252,7 +247,6 @@ module Proxy::Ansible
       # containing all the hosts.
       def rebuild_inventory(input)
         action_inputs = input.values.map { |hash| hash[:input][:action_input] }
-        hostnames = action_inputs.map { |hash| hash[:name] }
         inventories = action_inputs.map { |hash| hash[:ansible_inventory] }
         host_vars = inventories.map { |i| i['_meta']['hostvars'] }.reduce({}) do |acc, hosts|
           hosts.reduce(acc) do |inner_acc, (hostname, vars)|
@@ -261,8 +255,7 @@ module Proxy::Ansible
           end
         end
 
-        { '_meta' => { 'hostvars' => host_vars },
-          'all' => { 'hosts' => hostnames,
+        { 'all' => { 'hosts' => host_vars,
                      'vars' => inventories.first['all']['vars'] } }
       end
 
@@ -286,7 +279,7 @@ module Proxy::Ansible
             'ansible_password' => inventory['ssh_password'] || per_host['ansible_password'],
             'ansible_become_password' => inventory['effective_user_password'] || per_host['ansible_become_password']
           }
-          inventory['_meta']['hostvars'][host].update(new_secrets)
+          inventory['all']['hosts'][host].update(new_secrets)
         end
 
         inventory

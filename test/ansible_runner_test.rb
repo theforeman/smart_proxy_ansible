@@ -22,8 +22,7 @@ module Proxy::Ansible
 
       describe '#rebuild_secrets' do
         let(:inventory) do
-          { 'all' => { 'hosts' => ['foreman.example.com'] },
-            '_meta' => { 'hostvars' => { 'foreman.example.com' => {} } } }
+          { 'all' => { 'hosts' => { 'foreman.example.com' => {} } } }
         end
         let(:input) do
           host_secrets = { 'ansible_password' => 'letmein', 'ansible_become_password' => 'iamroot' }
@@ -36,14 +35,14 @@ module Proxy::Ansible
         test 'uses secrets from inventory' do
           test_inventory = inventory.merge('ssh_password' => 'sshpass', 'effective_user_password' => 'mypass')
           rebuilt = runner.send(:rebuild_secrets, test_inventory, input)
-          host_vars = rebuilt.dig('_meta', 'hostvars', 'foreman.example.com')
+          host_vars = rebuilt.dig('all', 'hosts', 'foreman.example.com')
           assert_equal 'sshpass', host_vars['ansible_password']
           assert_equal 'mypass', host_vars['ansible_become_password']
         end
 
         test 'host secrets are used when not overriden by inventory secrest' do
           rebuilt = runner.send(:rebuild_secrets, inventory, input)
-          host_vars = rebuilt.dig('_meta', 'hostvars', 'foreman.example.com')
+          host_vars = rebuilt.dig('all', 'hosts', 'foreman.example.com')
           assert_equal 'letmein', host_vars['ansible_password']
           assert_equal 'iamroot', host_vars['ansible_become_password']
         end
