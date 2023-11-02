@@ -1,4 +1,9 @@
 ---
 :enabled: true
 :working_dir: '~/.foreman-ansible'
+:vcs_integration: true
+:static_roles_paths: [
+  '/etc/ansible/roles',
+  '/usr/share/ansible/roles',
+]
 # :ansible_environment_file: /etc/foreman-proxy/ansible.env

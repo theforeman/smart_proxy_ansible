@@ -5,16 +5,20 @@ module Proxy
     # Implements the logic needed to read the roles and associated information
     class RolesReader
       class << self
-        DEFAULT_ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'.freeze
 
         def list_roles
-          roles = roles_path.split(':').map { |path| read_roles(path) }.flatten
+          all_roles = roles_path.split(':').map { |path| read_roles(path) }.flatten
+          roles = Set.new(all_roles).to_a
           collection_roles = ReaderHelper.collections_paths.split(':').map { |path| read_collection_roles(path) }.flatten
           roles + collection_roles
         end
 
+        def roles_path_from_settings
+          Proxy::Ansible::Plugin.settings[:all_roles_path]
+        end
+
         def roles_path
-          ReaderHelper.config_path(ReaderHelper.path_from_config('roles_path'), DEFAULT_ROLES_PATH)
+          ReaderHelper.config_path(ReaderHelper.path_from_config('roles_path'), roles_path_from_settings)
         end
 
         def logger

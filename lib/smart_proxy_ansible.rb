@@ -11,5 +11,7 @@ module Proxy
     require 'smart_proxy_ansible/playbooks_reader'
     require 'smart_proxy_ansible/reader_helper'
     require 'smart_proxy_ansible/variables_extractor'
+    require 'smart_proxy_ansible/vcs_cloner'
+    require 'git'
   end
 end
