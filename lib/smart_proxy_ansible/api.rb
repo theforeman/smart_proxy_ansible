@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Proxy
   module Ansible
     # API endpoints. Most of the code should be calling other classes,
@@ -34,6 +36,36 @@ module Proxy
 
       get '/playbooks/:playbooks_names?' do
         PlaybooksReader.playbooks(params[:playbooks_names]).to_json
+      end
+
+      get '/vcs_clone/repo_information' do
+        repo_info = VCSCloner.repo_information(params)
+        status repo_info.status
+        body repo_info.payload.to_json
+      end
+
+      get '/vcs_clone/roles' do
+        get_installed = VCSCloner.list_installed_roles
+        status get_installed.status
+        body get_installed.payload.to_json
+      end
+
+      post '/vcs_clone/roles' do
+        install = VCSCloner.install(params['repo_info'])
+        status install.status
+        body install.payload.to_json
+      end
+
+      put '/vcs_clone/roles/:role_name' do
+        update = VCSCloner.update(params['repo_info'])
+        status update.status
+        body update.payload.to_json
+      end
+
+      delete '/vcs_clone/roles/:role_name' do
+        delete = VCSCloner.delete(params)
+        status delete.status
+        body delete.payload.to_json
       end
 
       private
