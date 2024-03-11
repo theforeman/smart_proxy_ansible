@@ -1,0 +1,290 @@
+[0;35m[DEPRECATION WARNING]: [defaults]callback_whitelist option, normalizing names [0m
+[0;35mto new standard, use callbacks_enabled instead. This feature will be removed [0m
+[0;35mfrom ansible-core in version 2.15. Deprecation warnings can be disabled by [0m
+[0;35msetting deprecation_warnings=False in ansible.cfg.[0m
+
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+[0;32mok: [rhel8-new-machine-nofar.example.com][0m
+[0;32mok: [rhel9-nofar-new-machine.example.com][0m
+
+TASK [Display all parameters known for the Foreman host] ***********************
+[0;32mok: [rhel8-new-machine-nofar.example.com] => {[0m
+[0;32m    "foreman": {[0m
+[0;32m        "domainname": "example.com",[0m
+[0;32m        "foreman_fqdn": "rhel8-new-machine-nofar.example.com",[0m
+[0;32m        "foreman_hostname": "rhel8-new-machine-nofar",[0m
+[0;32m        "foreman_interfaces": [[0m
+[0;32m            {[0m
+[0;32m                "attached_to": null,[0m
+[0;32m                "attrs": {[0m
+[0;32m                    "active": true,[0m
+[0;32m                    "device": "eth0",[0m
+[0;32m                    "features": {[0m
+[0;32m                        "esp_hw_offload": "off [fixed]",[0m
+[0;32m                        "esp_tx_csum_hw_offload": "off [fixed]",[0m
+[0;32m                        "fcoe_mtu": "off [fixed]",[0m
+[0;32m                        "generic_receive_offload": "on",[0m
+[0;32m                        "generic_segmentation_offload": "on",[0m
+[0;32m                        "highdma": "on [fixed]",[0m
+[0;32m                        "hw_tc_offload": "off [fixed]",[0m
+[0;32m                        "l2_fwd_offload": "off [fixed]",[0m
+[0;32m                        "large_receive_offload": "off [fixed]",[0m
+[0;32m                        "loopback": "off [fixed]",[0m
+[0;32m                        "netns_local": "off [fixed]",[0m
+[0;32m                        "ntuple_filters": "off [fixed]",[0m
+[0;32m                        "receive_hashing": "off [fixed]",[0m
+[0;32m                        "rx_all": "off [fixed]",[0m
+[0;32m                        "rx_checksumming": "on [fixed]",[0m
+[0;32m                        "rx_fcs": "off [fixed]",[0m
+[0;32m                        "rx_gro_hw": "off [fixed]",[0m
+[0;32m                        "rx_gro_list": "off",[0m
+[0;32m                        "rx_udp_gro_forwarding": "off",[0m
+[0;32m                        "rx_udp_tunnel_port_offload": "off [fixed]",[0m
+[0;32m                        "rx_vlan_filter": "on [fixed]",[0m
+[0;32m                        "rx_vlan_offload": "off [fixed]",[0m
+[0;32m                        "rx_vlan_stag_filter": "off [fixed]",[0m
+[0;32m                        "rx_vlan_stag_hw_parse": "off [fixed]",[0m
+[0;32m                        "scatter_gather": "on",[0m
+[0;32m                        "tcp_segmentation_offload": "on",[0m
+[0;32m                        "tls_hw_record": "off [fixed]",[0m
+[0;32m                        "tls_hw_rx_offload": "off [fixed]",[0m
+[0;32m                        "tls_hw_tx_offload": "off [fixed]",[0m
+[0;32m                        "tx_checksum_fcoe_crc": "off [fixed]",[0m
+[0;32m                        "tx_checksum_ip_generic": "on",[0m
+[0;32m                        "tx_checksum_ipv4": "off [fixed]",[0m
+[0;32m                        "tx_checksum_ipv6": "off [fixed]",[0m
+[0;32m                        "tx_checksum_sctp": "off [fixed]",[0m
+[0;32m                        "tx_checksumming": "on",[0m
+[0;32m                        "tx_esp_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_fcoe_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_gre_csum_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_gre_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_gso_list": "off [fixed]",[0m
+[0;32m                        "tx_gso_partial": "off [fixed]",[0m
+[0;32m                        "tx_gso_robust": "on [fixed]",[0m
+[0;32m                        "tx_ipxip4_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_ipxip6_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_lockless": "off [fixed]",[0m
+[0;32m                        "tx_nocache_copy": "off",[0m
+[0;32m                        "tx_scatter_gather": "on",[0m
+[0;32m                        "tx_scatter_gather_fraglist": "off [fixed]",[0m
+[0;32m                        "tx_sctp_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_tcp6_segmentation": "on",[0m
+[0;32m                        "tx_tcp_ecn_segmentation": "on",[0m
+[0;32m                        "tx_tcp_mangleid_segmentation": "off",[0m
+[0;32m                        "tx_tcp_segmentation": "on",[0m
+[0;32m                        "tx_tunnel_remcsum_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_udp_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_udp_tnl_csum_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_udp_tnl_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_vlan_offload": "off [fixed]",[0m
+[0;32m                        "tx_vlan_stag_hw_insert": "off [fixed]",[0m
+[0;32m                        "vlan_challenged": "off [fixed]"[0m
+[0;32m                    },[0m
+[0;32m                    "hw_timestamp_filters": [],[0m
+[0;32m                    "ipv4": {[0m
+[0;32m                        "address": "192.168.121.186",[0m
+[0;32m                        "broadcast": "192.168.121.255",[0m
+[0;32m                        "netmask": "255.255.255.0",[0m
+[0;32m                        "network": "192.168.121.0",[0m
+[0;32m                        "prefix": "24"[0m
+[0;32m                    },[0m
+[0;32m                    "module": "virtio_net",[0m
+[0;32m                    "mtu": 1500,[0m
+[0;32m                    "pciid": "virtio2",[0m
+[0;32m                    "promisc": false,[0m
+[0;32m                    "speed": -1,[0m
+[0;32m                    "timestamping": [],[0m
+[0;32m                    "type": "ether"[0m
+[0;32m                },[0m
+[0;32m                "identifier": "eth0",[0m
+[0;32m                "ip": "192.168.121.186",[0m
+[0;32m                "ip6": null,[0m
+[0;32m                "link": true,[0m
+[0;32m                "mac": "52:54:00:7f:dd:89",[0m
+[0;32m                "managed": true,[0m
+[0;32m                "name": "rhel8-new-machine-nofar.example.com",[0m
+[0;32m                "primary": true,[0m
+[0;32m                "provision": true,[0m
+[0;32m                "subnet": null,[0m
+[0;32m                "subnet6": null,[0m
+[0;32m                "tag": null,[0m
+[0;32m                "type": "Interface",[0m
+[0;32m                "virtual": false[0m
+[0;32m            }[0m
+[0;32m        ],[0m
+[0;32m        "foreman_subnets": [],[0m
+[0;32m        "foreman_users": {[0m
+[0;32m            "username": {[0m
+[0;32m                "description": "",[0m
+[0;32m                "firstname": "firstname",[0m
+[0;32m                "fullname": "User Name",[0m
+[0;32m                "lastname": "lastname",[0m
+[0;32m                "mail": "username@email.com",[0m
+[0;32m                "name": "username",[0m
+[0;32m                "ssh_authorized_keys": [][0m
+[0;32m            }[0m
+[0;32m        },[0m
+[0;32m        "hostgroup": "FirstHG",[0m
+[0;32m        "location": "Default Location",[0m
+[0;32m        "location_title": "Default Location",[0m
+[0;32m        "organization": "Default Organization",[0m
+[0;32m        "organization_title": "Default Organization",[0m
+[0;32m        "owner_email": "user@email.com",[0m
+[0;32m        "owner_name": "User Name",[0m
+[0;32m        "root_pw": null,[0m
+[0;32m        "ssh_authorized_keys": [][0m
+[0;32m    }[0m
+[0;32m}[0m
+[0;32mok: [rhel9-nofar-new-machine.example.com] => {[0m
+[0;32m    "foreman": {[0m
+[0;32m        "domainname": "example.com",[0m
+[0;32m        "foreman_fqdn": "rhel9-nofar-new-machine.example.com",[0m
+[0;32m        "foreman_hostname": "rhel9-nofar-new-machine",[0m
+[0;32m        "foreman_interfaces": [[0m
+[0;32m            {[0m
+[0;32m                "attached_to": null,[0m
+[0;32m                "attrs": {[0m
+[0;32m                    "active": true,[0m
+[0;32m                    "device": "eth0",[0m
+[0;32m                    "features": {[0m
+[0;32m                        "esp_hw_offload": "off [fixed]",[0m
+[0;32m                        "esp_tx_csum_hw_offload": "off [fixed]",[0m
+[0;32m                        "fcoe_mtu": "off [fixed]",[0m
+[0;32m                        "generic_receive_offload": "on",[0m
+[0;32m                        "generic_segmentation_offload": "on",[0m
+[0;32m                        "highdma": "on [fixed]",[0m
+[0;32m                        "hsr_dup_offload": "off [fixed]",[0m
+[0;32m                        "hsr_fwd_offload": "off [fixed]",[0m
+[0;32m                        "hsr_tag_ins_offload": "off [fixed]",[0m
+[0;32m                        "hsr_tag_rm_offload": "off [fixed]",[0m
+[0;32m                        "hw_tc_offload": "off [fixed]",[0m
+[0;32m                        "l2_fwd_offload": "off [fixed]",[0m
+[0;32m                        "large_receive_offload": "off [fixed]",[0m
+[0;32m                        "loopback": "off [fixed]",[0m
+[0;32m                        "macsec_hw_offload": "off [fixed]",[0m
+[0;32m                        "netns_local": "off [fixed]",[0m
+[0;32m                        "ntuple_filters": "off [fixed]",[0m
+[0;32m                        "receive_hashing": "off [fixed]",[0m
+[0;32m                        "rx_all": "off [fixed]",[0m
+[0;32m                        "rx_checksumming": "on [fixed]",[0m
+[0;32m                        "rx_fcs": "off [fixed]",[0m
+[0;32m                        "rx_gro_hw": "on",[0m
+[0;32m                        "rx_gro_list": "off",[0m
+[0;32m                        "rx_udp_gro_forwarding": "off",[0m
+[0;32m                        "rx_udp_tunnel_port_offload": "off [fixed]",[0m
+[0;32m                        "rx_vlan_filter": "on [fixed]",[0m
+[0;32m                        "rx_vlan_offload": "off [fixed]",[0m
+[0;32m                        "rx_vlan_stag_filter": "off [fixed]",[0m
+[0;32m                        "rx_vlan_stag_hw_parse": "off [fixed]",[0m
+[0;32m                        "scatter_gather": "on",[0m
+[0;32m                        "tcp_segmentation_offload": "on",[0m
+[0;32m                        "tls_hw_record": "off [fixed]",[0m
+[0;32m                        "tls_hw_rx_offload": "off [fixed]",[0m
+[0;32m                        "tls_hw_tx_offload": "off [fixed]",[0m
+[0;32m                        "tx_checksum_fcoe_crc": "off [fixed]",[0m
+[0;32m                        "tx_checksum_ip_generic": "on",[0m
+[0;32m                        "tx_checksum_ipv4": "off [fixed]",[0m
+[0;32m                        "tx_checksum_ipv6": "off [fixed]",[0m
+[0;32m                        "tx_checksum_sctp": "off [fixed]",[0m
+[0;32m                        "tx_checksumming": "on",[0m
+[0;32m                        "tx_esp_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_fcoe_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_gre_csum_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_gre_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_gso_list": "off [fixed]",[0m
+[0;32m                        "tx_gso_partial": "off [fixed]",[0m
+[0;32m                        "tx_gso_robust": "on [fixed]",[0m
+[0;32m                        "tx_ipxip4_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_ipxip6_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_lockless": "off [fixed]",[0m
+[0;32m                        "tx_nocache_copy": "off",[0m
+[0;32m                        "tx_scatter_gather": "on",[0m
+[0;32m                        "tx_scatter_gather_fraglist": "off [fixed]",[0m
+[0;32m                        "tx_sctp_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_tcp6_segmentation": "on",[0m
+[0;32m                        "tx_tcp_ecn_segmentation": "on",[0m
+[0;32m                        "tx_tcp_mangleid_segmentation": "off",[0m
+[0;32m                        "tx_tcp_segmentation": "on",[0m
+[0;32m                        "tx_tunnel_remcsum_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_udp_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_udp_tnl_csum_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_udp_tnl_segmentation": "off [fixed]",[0m
+[0;32m                        "tx_vlan_offload": "off [fixed]",[0m
+[0;32m                        "tx_vlan_stag_hw_insert": "off [fixed]",[0m
+[0;32m                        "vlan_challenged": "off [fixed]"[0m
+[0;32m                    },[0m
+[0;32m                    "hw_timestamp_filters": [],[0m
+[0;32m                    "ipv4": {[0m
+[0;32m                        "address": "192.168.121.29",[0m
+[0;32m                        "broadcast": "192.168.121.255",[0m
+[0;32m                        "netmask": "255.255.255.0",[0m
+[0;32m                        "network": "192.168.121.0",[0m
+[0;32m                        "prefix": "24"[0m
+[0;32m                    },[0m
+[0;32m                    "module": "virtio_net",[0m
+[0;32m                    "mtu": 1500,[0m
+[0;32m                    "pciid": "virtio2",[0m
+[0;32m                    "promisc": false,[0m
+[0;32m                    "speed": -1,[0m
+[0;32m                    "timestamping": [],[0m
+[0;32m                    "type": "ether"[0m
+[0;32m                },[0m
+[0;32m                "identifier": "eth0",[0m
+[0;32m                "ip": "192.168.121.29",[0m
+[0;32m                "ip6": null,[0m
+[0;32m                "link": true,[0m
+[0;32m                "mac": "52:54:00:b1:8a:4d",[0m
+[0;32m                "managed": true,[0m
+[0;32m                "name": "rhel9-nofar-new-machine.example.com",[0m
+[0;32m                "primary": true,[0m
+[0;32m                "provision": true,[0m
+[0;32m                "subnet": null,[0m
+[0;32m                "subnet6": null,[0m
+[0;32m                "tag": null,[0m
+[0;32m                "type": "Interface",[0m
+[0;32m                "virtual": false[0m
+[0;32m            }[0m
+[0;32m        ],[0m
+[0;32m        "foreman_subnets": [],[0m
+[0;32m        "foreman_users": {[0m
+[0;32m            "user": {[0m
+[0;32m                "description": "",[0m
+[0;32m                "firstname": "firstname",[0m
+[0;32m                "fullname": "Full Name",[0m
+[0;32m                "lastname": "lastname",[0m
+[0;32m                "mail": "username@email.com",[0m
+[0;32m                "name": "username",[0m
+[0;32m                "ssh_authorized_keys": [][0m
+[0;32m            }[0m
+[0;32m        },[0m
+[0;32m        "location": "Default Location",[0m
+[0;32m        "location_title": "Default Location",[0m
+[0;32m        "organization": "Default Organization",[0m
+[0;32m        "organization_title": "Default Organization",[0m
+[0;32m        "owner_email": "username@email.com",[0m
+[0;32m        "owner_name": "User Name",[0m
+[0;32m        "root_pw": null,[0m
+[0;32m        "ssh_authorized_keys": [][0m
+[0;32m    }[0m
+[0;32m}[0m
+
+TASK [Apply roles] *************************************************************
+
+TASK [pingrole : ping role] ****************************************************
+[0;32mok: [rhel8-new-machine-nofar.example.com] => {[0m
+[0;32m    "msg": "192.168.121.186"[0m
+[0;32m}[0m
+[0;32mok: [rhel9-nofar-new-machine.example.com] => {[0m
+[0;32m    "msg": "192.168.121.29"[0m
+[0;32m}[0m
+
+TASK [fail_always_role : Fail Task] ********************************************
+[0;31mfatal: [rhel8-new-machine-nofar.example.com]: FAILED! => {"changed": false, "msg": "This task will always fail"}[0m
+
+PLAY RECAP *********************************************************************
+[0;31mrhel8-new-machine-nofar.example.com[0m : [0;32mok=3   [0m changed=0    unreachable=0    [0;31mfailed=1   [0m skipped=0    rescued=0    ignored=0   
+[0;32mrhel9-nofar-new-machine.example.com[0m : [0;32mok=3   [0m changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
