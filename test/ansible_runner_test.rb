@@ -21,30 +21,36 @@ module Proxy::Ansible
       end
 
       describe '#rebuild_secrets' do
-        let(:inventory) do
-          { 'all' => { 'hosts' => { 'foreman.example.com' => {} } } }
-        end
-        let(:input) do
-          host_secrets = { 'ansible_password' => 'letmein', 'ansible_become_password' => 'iamroot' }
+        let(:inventory) { { 'all' => { 'hosts' => { 'foreman.example.com' => {} } } } }
+        let(:host_secrets) { { 'ansible_password' => 'letmein', 'ansible_become_password' => 'iamroot' } }
+        let(:rex_secrets) { { 'ssh_password' => 'sshpass', 'effective_user_password' => 'mypass' } }
+
+        let(:default_secrets) do
           secrets = { 'per-host' => { 'foreman.example.com' => host_secrets } }
-          host_input = { 'input' => { 'action_input' => { 'secrets' => secrets } } }
-          { 'foreman.example.com' => host_input }
+          { 'foreman.example.com' => { 'input' => { 'action_input' => { 'secrets' => secrets } } } }
         end
+
+        let(:rex_input_secrets) do
+          secrets = { 'per-host' => { 'foreman.example.com' => host_secrets } }
+          { 'foreman.example.com' => { 'input' => { 'action_input' => { 'secrets' => secrets.merge(rex_secrets) } } } }
+        end
+
         let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
 
-        test 'uses secrets from inventory' do
-          test_inventory = inventory.merge('ssh_password' => 'sshpass', 'effective_user_password' => 'mypass')
-          rebuilt = runner.send(:rebuild_secrets, test_inventory, input)
-          host_vars = rebuilt.dig('all', 'hosts', 'foreman.example.com')
-          assert_equal 'sshpass', host_vars['ansible_password']
-          assert_equal 'mypass', host_vars['ansible_become_password']
-        end
-
-        test 'host secrets are used when not overriden by inventory secrest' do
-          rebuilt = runner.send(:rebuild_secrets, inventory, input)
+        # Since we don't keep secrets in the host inventory,
+        # we can either retrieve them from the host settings or from the REX job input
+        test 'uses default secrets' do
+          rebuilt = runner.send(:rebuild_secrets, inventory, default_secrets)
           host_vars = rebuilt.dig('all', 'hosts', 'foreman.example.com')
           assert_equal 'letmein', host_vars['ansible_password']
           assert_equal 'iamroot', host_vars['ansible_become_password']
+        end
+
+        test 'uses secrets from REX job input' do
+          rebuilt = runner.send(:rebuild_secrets, inventory, rex_input_secrets)
+          host_vars = rebuilt.dig('all', 'hosts', 'foreman.example.com')
+          assert_equal 'sshpass', host_vars['ansible_password']
+          assert_equal 'mypass', host_vars['ansible_become_password']
         end
       end
     end
