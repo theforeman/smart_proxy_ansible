@@ -276,8 +276,8 @@ module Proxy::Ansible
           per_host = secrets['per-host'][host]
 
           new_secrets = {
-            'ansible_password' => inventory['ssh_password'] || per_host['ansible_password'],
-            'ansible_become_password' => inventory['effective_user_password'] || per_host['ansible_become_password']
+            'ansible_password' => secrets['ssh_password'] || per_host['ansible_password'],
+            'ansible_become_password' => secrets['effective_user_password'] || per_host['ansible_become_password']
           }
           inventory['all']['hosts'][host].update(new_secrets)
         end
