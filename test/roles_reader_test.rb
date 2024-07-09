@@ -7,7 +7,7 @@ require_relative '../lib/smart_proxy_ansible/reader_helper'
 # this class simply reads roles from its path in ansible.cfg
 class RolesReaderTest < Minitest::Test
   CONFIG_PATH = ::Proxy::Ansible::ReaderHelper.singleton_class::DEFAULT_CONFIG_FILE
-  ROLES_PATH = ::Proxy::Ansible::RolesReader.singleton_class::DEFAULT_ROLES_PATH
+  ROLES_PATH = '/etc/ansible/roles:/usr/share/ansible/roles'
   COLLECTIONS_PATHS = ::Proxy::Ansible::ReaderHelper.singleton_class::DEFAULT_COLLECTIONS_PATHS
 
   def self.expect_content_config(ansible_cfg_content)
@@ -17,6 +17,7 @@ class RolesReaderTest < Minitest::Test
 
   describe '#roles_path' do
     test 'detects commented roles_path' do
+      Proxy::Ansible::RolesReader.stubs(:roles_path_from_settings).returns('/etc/ansible/roles:/usr/share/ansible/roles')
       RolesReaderTest.expect_content_config ['#roles_path = thisiscommented!']
       assert_equal(ROLES_PATH,
                    Proxy::Ansible::RolesReader.roles_path)
@@ -90,6 +91,7 @@ class RolesReaderTest < Minitest::Test
 
     describe 'with unreadable config' do
       test 'handles "No such file or directory" by using defaults' do
+        Proxy::Ansible::RolesReader.stubs(:roles_path_from_settings).returns('/etc/ansible/roles:/usr/share/ansible/roles')
         File.expects(:readlines).times(2).with(CONFIG_PATH).raises(Errno::ENOENT)
 
         ROLES_PATH.split(':').map do |path|
@@ -105,6 +107,7 @@ class RolesReaderTest < Minitest::Test
       end
 
       test 'handles "Permission denied" by using defaults' do
+        Proxy::Ansible::RolesReader.stubs(:roles_path_from_settings).returns('/etc/ansible/roles:/usr/share/ansible/roles')
         File.expects(:readlines).times(2).with(CONFIG_PATH).raises(Errno::EACCES)
 
         ROLES_PATH.split(':').map do |path|
