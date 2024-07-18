@@ -312,6 +312,12 @@ module Proxy::Ansible
 
         inventory
       end
+
+      def publish_data_for(hostname, content, type)
+        @outputs.each_key do |peer_hostname, _|
+          super(peer_hostname, content, peer_hostname == hostname ? type : 'debug')
+        end
+      end
     end
   end
 end
