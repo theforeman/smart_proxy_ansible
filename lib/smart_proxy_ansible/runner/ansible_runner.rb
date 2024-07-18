@@ -144,10 +144,12 @@ module Proxy::Ansible
           failures = event.dig('event_data', 'failures') || {}
           unreachable = event.dig('event_data', 'dark') || {}
           rescued = event.dig('event_data', 'rescued') || {}
-          header, *rows = event['stdout'].strip.lines.map(&:chomp)
+          header, *rows = event['stdout'].strip.lines.map(&:rstrip)
+          # #lines strips the leading newline that precedes the header
+          broadcast_data("\n" + header + "\n", 'stdout')
           @outputs.keys.select { |key| key.is_a? String }.each do |host|
             line = rows.find { |row| row =~ /#{host}/ }
-            publish_data_for(host, [header, line].join("\n"), 'stdout')
+            publish_data_for(host, line + "\n", 'stdout')
 
             # If the task has been rescued, it won't consider a failure
             if @exit_statuses[host].to_i != 0 && failures[host].to_i <= 0 && unreachable[host].to_i <= 0 && rescued[host].to_i > 0
