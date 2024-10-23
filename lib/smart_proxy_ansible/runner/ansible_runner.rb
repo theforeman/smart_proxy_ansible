@@ -22,6 +22,7 @@ module Proxy::Ansible
         @verbosity_level = action_input[:verbosity_level]
         @rex_command = action_input[:remote_execution_command]
         @check_mode = action_input[:check_mode]
+        @job_check_mode = action_input[:job_check_mode]
         @tags = action_input[:tags]
         @tags_flag = action_input[:tags_flag]
         @passphrase = action_input['secrets']['key_passphrase']
@@ -216,7 +217,11 @@ module Proxy::Ansible
       end
 
       def check_cmd
-        check_mode? ? '"--check"' : ''
+        if check_mode? || job_check_mode?
+          '"--check"'
+        else
+          ''
+        end
       end
 
       def verbosity
@@ -229,6 +234,10 @@ module Proxy::Ansible
 
       def check_mode?
         @check_mode == true && @rex_command == false
+      end
+
+      def job_check_mode?
+        @job_check_mode == true
       end
 
       def prepare_directory_structure
