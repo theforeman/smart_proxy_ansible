@@ -147,9 +147,17 @@ module Proxy::Ansible
           header, *rows = event['stdout'].strip.lines.map(&:rstrip)
           # #lines strips the leading newline that precedes the header
           broadcast_data("\n" + header + "\n", 'stdout')
-          @outputs.keys.select { |key| key.is_a? String }.each do |host|
-            line = rows.find { |row| row =~ /#{host}/ }
-            publish_data_for(host, line + "\n", 'stdout')
+
+          inventory_hosts = @outputs.keys.select { |key| key.is_a? String }
+          rows.each do |row|
+            host = inventory_hosts.find { |host| row =~ /#{host}/ }
+            line = row + "\n"
+            unless host
+              broadcast_data(line, 'stdout')
+              next
+            end
+
+            publish_data_for(host, line, 'stdout')
 
             # If the task has been rescued, it won't consider a failure
             if @exit_statuses[host].to_i != 0 && failures[host].to_i <= 0 && unreachable[host].to_i <= 0 && rescued[host].to_i > 0
