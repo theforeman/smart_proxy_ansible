@@ -28,6 +28,6 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.7'
 
   gem.add_development_dependency 'rake', '~> 13.0'
-  gem.add_runtime_dependency('smart_proxy_dynflow', '~> 0.8')
+  gem.add_runtime_dependency('smart_proxy_dynflow', '~> 0.8', '>= 0.9.4')
   gem.add_runtime_dependency('smart_proxy_remote_execution_ssh', '~> 0.4')
 end
