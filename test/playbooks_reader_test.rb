@@ -54,24 +54,23 @@ class PlaybooksReaderTest < Minitest::Test
   end
 
   describe 'playbooks_names method' do
-    let(:playbooks_names) { %w[xprazak2.forklift_collection.freeipa_server.yml xprazak2.forklift_collection.upgrade.yaml] }
     before do
-      Dir.expects(:glob).with('/usr/share/ansible/collections/ansible_collections/*/*/playbooks/*').returns([])
-      Dir.expects(:glob).with('/etc/ansible/collections/ansible_collections/*/*/playbooks/*').returns(playbooks_names)
+      Proxy::Ansible::PlaybooksReader.expects(:glob_path).with('/usr/share/ansible/collections/ansible_collections/*/*/playbooks/*').returns([])
+      collection_playbooks = [
+        '/etc/ansible/collections/ansible_collections/xprazak2/forklift_collection/playbooks/freeipa_server.yml',
+        '/etc/ansible/collections/ansible_collections/xprazak2/forklift_collection/playbooks/upgrade.yaml',
+      ]
+      Proxy::Ansible::PlaybooksReader.expects(:glob_path).with('/etc/ansible/collections/ansible_collections/*/*/playbooks/*').returns(collection_playbooks)
     end
 
     it 'should return playbooks names as an array' do
       res = Proxy::Ansible::PlaybooksReader.playbooks_names
       assert_equal Array, res.class
-      assert_equal 2, res.count
     end
 
     it 'should return playbooks names with no .yml or .yaml extension' do
       res = Proxy::Ansible::PlaybooksReader.playbooks_names
-      assert_equal Array, res.class
-      assert_equal 2, res.count
-      assert not(res.first.match(/.ya?ml/))
-      assert not(res.last.match(/.ya?ml/))
+      assert_equal %w[xprazak2.forklift_collection.freeipa_server xprazak2.forklift_collection.upgrade], res
     end
   end
 end
