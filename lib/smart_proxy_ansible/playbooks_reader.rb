@@ -14,13 +14,13 @@ module Proxy
         end
 
         def get_playbooks_names(collections_path)
-          Dir.glob("#{collections_path}/ansible_collections/*/*/playbooks/*").map do |path|
+          glob_path("#{collections_path}/ansible_collections/*/*/playbooks/*").map do |path|
             ReaderHelper.playbook_or_role_full_name(path)
           end
         end
 
         def read_collection_playbooks(collections_path, playbooks_to_import = nil)
-          Dir.glob("#{collections_path}/ansible_collections/*/*/playbooks/*").map do |path|
+          glob_path("#{collections_path}/ansible_collections/*/*/playbooks/*").map do |path|
             name = ReaderHelper.playbook_or_role_full_name(path)
             {
               name: name,
@@ -30,6 +30,12 @@ module Proxy
         rescue Errno::ENOENT, Errno::EACCES => e
           message = "Could not read Ansible playbooks #{collections_path} - #{e.message}"
           raise ReadPlaybooksException, message
+        end
+
+        private
+
+        def glob_path(path)
+          Dir.glob path
         end
       end
     end

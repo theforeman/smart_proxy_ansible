@@ -44,7 +44,7 @@ module Proxy
         end
 
         def read_collection_roles(collections_path)
-          Dir.glob("#{collections_path}/ansible_collections/*/*/roles/*").map do |path|
+          glob_path("#{collections_path}/ansible_collections/*/*/roles/*").map do |path|
             ReaderHelper.playbook_or_role_full_name(path)
           end
         rescue Errno::ENOENT, Errno::EACCES => e
