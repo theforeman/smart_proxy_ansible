@@ -1,0 +1,451 @@
+{
+  "rhel8-new-machine-nofar.example.com": {
+    "execution_plan_id": "da8392c2-dc2b-47aa-92e5-26371d4432c3",
+    "run_step_id": 2,
+    "input": {
+      "action_input": {
+        "proxy_operation_name": "ansible-runner",
+        "time_to_pickup": 86400,
+        "tags": "",
+        "tags_flag": "",
+        "ansible_inventory": {
+          "all": {
+            "hosts": [
+              "rhel8-new-machine-nofar.example.com"
+            ],
+            "vars": {
+            }
+          },
+          "_meta": {
+            "hostvars": {
+              "rhel8-new-machine-nofar.example.com": {
+                "foreman": {
+                  "foreman_hostname": "rhel8-new-machine-nofar",
+                  "foreman_fqdn": "rhel8-new-machine-nofar.example.com",
+                  "root_pw": "nil",
+                  "foreman_subnets": [
+                  ],
+                  "foreman_interfaces": [
+                    {
+                      "ip": "192.168.121.186",
+                      "ip6": "nil",
+                      "mac": "52:54:00:7f:dd:89",
+                      "name": "rhel8-new-machine-nofar.example.com",
+                      "attrs": {
+                        "device": "eth0",
+                        "mtu": 1500,
+                        "active": true,
+                        "module": "virtio_net",
+                        "type": "ether",
+                        "pciid": "virtio2",
+                        "speed": -1,
+                        "promisc": false,
+                        "ipv4": {
+                          "address": "192.168.121.186",
+                          "broadcast": "192.168.121.255",
+                          "netmask": "255.255.255.0",
+                          "network": "192.168.121.0"
+                        },
+                        "features": {
+                          "rx_checksumming": "on [fixed]",
+                          "tx_checksumming": "on",
+                          "tx_checksum_ipv4": "off [fixed]",
+                          "tx_checksum_ip_generic": "on",
+                          "tx_checksum_ipv6": "off [fixed]",
+                          "tx_checksum_fcoe_crc": "off [fixed]",
+                          "tx_checksum_sctp": "off [fixed]",
+                          "scatter_gather": "on",
+                          "tx_scatter_gather": "on",
+                          "tx_scatter_gather_fraglist": "off [fixed]",
+                          "tcp_segmentation_offload": "on",
+                          "tx_tcp_segmentation": "on",
+                          "tx_tcp_ecn_segmentation": "on",
+                          "tx_tcp_mangleid_segmentation": "off",
+                          "tx_tcp6_segmentation": "on",
+                          "generic_segmentation_offload": "on",
+                          "generic_receive_offload": "on",
+                          "large_receive_offload": "off [fixed]",
+                          "rx_vlan_offload": "off [fixed]",
+                          "tx_vlan_offload": "off [fixed]",
+                          "ntuple_filters": "off [fixed]",
+                          "receive_hashing": "off [fixed]",
+                          "highdma": "on [fixed]",
+                          "rx_vlan_filter": "on [fixed]",
+                          "vlan_challenged": "off [fixed]",
+                          "tx_lockless": "off [fixed]",
+                          "netns_local": "off [fixed]",
+                          "tx_gso_robust": "on [fixed]",
+                          "tx_fcoe_segmentation": "off [fixed]",
+                          "tx_gre_segmentation": "off [fixed]",
+                          "tx_gre_csum_segmentation": "off [fixed]",
+                          "tx_ipxip4_segmentation": "off [fixed]",
+                          "tx_ipxip6_segmentation": "off [fixed]",
+                          "tx_udp_tnl_segmentation": "off [fixed]",
+                          "tx_udp_tnl_csum_segmentation": "off [fixed]",
+                          "tx_gso_partial": "off [fixed]",
+                          "tx_tunnel_remcsum_segmentation": "off [fixed]",
+                          "tx_sctp_segmentation": "off [fixed]",
+                          "tx_esp_segmentation": "off [fixed]",
+                          "tx_udp_segmentation": "off [fixed]",
+                          "tx_gso_list": "off [fixed]",
+                          "rx_udp_gro_forwarding": "off",
+                          "rx_gro_list": "off",
+                          "tls_hw_rx_offload": "off [fixed]",
+                          "fcoe_mtu": "off [fixed]",
+                          "tx_nocache_copy": "off",
+                          "loopback": "off [fixed]",
+                          "rx_fcs": "off [fixed]",
+                          "rx_all": "off [fixed]",
+                          "tx_vlan_stag_hw_insert": "off [fixed]",
+                          "rx_vlan_stag_hw_parse": "off [fixed]",
+                          "rx_vlan_stag_filter": "off [fixed]",
+                          "l2_fwd_offload": "off [fixed]",
+                          "hw_tc_offload": "off [fixed]",
+                          "esp_hw_offload": "off [fixed]",
+                          "esp_tx_csum_hw_offload": "off [fixed]",
+                          "rx_udp_tunnel_port_offload": "off [fixed]",
+                          "tls_hw_tx_offload": "off [fixed]",
+                          "rx_gro_hw": "off [fixed]",
+                          "tls_hw_record": "off [fixed]"
+                        },
+                        "timestamping": [
+                        ],
+                        "hw_timestamp_filters": [
+                        ]
+                      },
+                      "virtual": false,
+                      "link": true,
+                      "identifier": "eth0",
+                      "managed": true,
+                      "primary": true,
+                      "provision": true,
+                      "subnet": "nil",
+                      "subnet6": "nil",
+                      "tag": "nil",
+                      "attached_to": "nil",
+                      "type": "Interface"
+                    }
+                  ],
+                  "location": "Default Location",
+                  "location_title": "Default Location",
+                  "organization": "Default Organization",
+                  "organization_title": "Default Organization",
+                  "domainname": "example.com",
+                  "owner_name": "Full Name",
+                  "owner_email": "username@email.com",
+                  "ssh_authorized_keys": [
+                  ],
+                  "foreman_users": {
+                    "username": {
+                      "firstname": "firstname",
+                      "lastname": "lastname",
+                      "mail": "username@email.com",
+                      "description": "",
+                      "fullname": "Full Name",
+                      "name": "username",
+                      "ssh_authorized_keys": [
+                      ]
+                    }
+                  }
+                },
+                "foreman_ansible_roles": [
+                  "pingrole"
+                ],
+                "ansible_connection": "ssh",
+                "ansible_ssh_private_key_file": "nil",
+                "ansible_winrm_server_cert_validation": "validate",
+                "ansible_user": "root",
+                "ansible_become_method": "sudo",
+                "ansible_port": 22,
+                "ansible_host": "192.168.121.186",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "root",
+                "ansible_roles_check_mode": false,
+                "remote_execution_ssh_user": "root",
+                "remote_execution_effective_user_method": "sudo",
+                "remote_execution_connect_by_ip": true,
+                "host_packages": "",
+                "host_registration_insights": false,
+                "host_registration_remote_execution": true,
+                "test_param2": true,
+                "test_param1": "\"This is a test\"",
+                "remote_execution_ssh_keys": [
+                  "ssh-ed25519 remote_execution_ssh_key email@mail.com"
+                ]
+              }
+            }
+          }
+        },
+        "verbosity_level": "0",
+        "remote_execution_command": false,
+        "name": "rhel8-new-machine-nofar.example.com",
+        "check_mode": false,
+        "cleanup_working_dirs": true,
+        "hostname": "192.168.121.186",
+        "script": "---\n- hosts: all\n  pre_tasks:\n    - name: Display all parameters known for the Foreman host\n      debug:\n        var: foreman\n      tags:\n        - always\n  tasks:\n    - name: Apply roles\n      include_role:\n        name: \"{{ role }}\"\n      tags:\n        - always\n      loop: \"{{ foreman_ansible_roles }}\"\n      loop_control:\n        loop_var: role",
+        "execution_timeout_interval": "nil",
+        "secrets": {
+          "ssh_password": "nil",
+          "key_passphrase": "nil",
+          "effective_user_password": "nil",
+          "per-host": {
+            "rhel8-new-machine-nofar.example.com": {
+              "ansible_password": "",
+              "ansible_become_password": ""
+            }
+          }
+        },
+        "use_batch_triggering": true,
+        "use_concurrency_control": false,
+        "first_execution": false,
+        "alternative_names": {
+          "fqdn": "rhel8-new-machine-nofar.example.com"
+        },
+        "connection_options": {
+          "retry_interval": 15,
+          "retry_count": 4,
+          "proxy_batch_triggering": true
+        },
+        "proxy_url": "http://localhost:8000",
+        "proxy_action_name": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction",
+        "current_request_id": "ee2baa3e-ffe6-44e1-a7a1-1c305a82906b",
+        "current_timezone": "Asia/Jerusalem",
+        "current_organization_id": 1,
+        "current_location_id": 2,
+        "current_user_id": 4,
+        "callback": {
+          "task_id": "a4437a5b-d722-4407-b874-7b97e01dbece",
+          "step_id": 3
+        }
+      },
+      "action_class": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction"
+    }
+  },
+  "rhel9-nofar-new-machine.example.com": {
+    "execution_plan_id": "bd2f7b81-f658-40bc-9c2f-d9f1803ca54f",
+    "run_step_id": 2,
+    "input": {
+      "action_input": {
+        "proxy_operation_name": "ansible-runner",
+        "time_to_pickup": 86400,
+        "tags": "",
+        "tags_flag": "",
+        "ansible_inventory": {
+          "all": {
+            "hosts": [
+              "rhel9-nofar-new-machine.example.com"
+            ],
+            "vars": {
+            }
+          },
+          "_meta": {
+            "hostvars": {
+              "rhel9-nofar-new-machine.example.com": {
+                "foreman": {
+                  "foreman_hostname": "rhel9-nofar-new-machine",
+                  "foreman_fqdn": "rhel9-nofar-new-machine.example.com",
+                  "root_pw": "nil",
+                  "foreman_subnets": [
+                  ],
+                  "foreman_interfaces": [
+                    {
+                      "ip": "192.168.121.29",
+                      "ip6": "nil",
+                      "mac": "52:54:00:b1:8a:4d",
+                      "name": "rhel9-nofar-new-machine.example.com",
+                      "attrs": {
+                        "device": "eth0",
+                        "mtu": 1500,
+                        "active": true,
+                        "module": "virtio_net",
+                        "type": "ether",
+                        "pciid": "virtio2",
+                        "speed": -1,
+                        "promisc": false,
+                        "ipv4": {
+                          "address": "192.168.121.29",
+                          "broadcast": "192.168.121.255",
+                          "netmask": "255.255.255.0",
+                          "network": "192.168.121.0"
+                        },
+                        "features": {
+                          "rx_checksumming": "on [fixed]",
+                          "tx_checksumming": "on",
+                          "tx_checksum_ipv4": "off [fixed]",
+                          "tx_checksum_ip_generic": "on",
+                          "tx_checksum_ipv6": "off [fixed]",
+                          "tx_checksum_fcoe_crc": "off [fixed]",
+                          "tx_checksum_sctp": "off [fixed]",
+                          "scatter_gather": "on",
+                          "tx_scatter_gather": "on",
+                          "tx_scatter_gather_fraglist": "off [fixed]",
+                          "tcp_segmentation_offload": "on",
+                          "tx_tcp_segmentation": "on",
+                          "tx_tcp_ecn_segmentation": "on",
+                          "tx_tcp_mangleid_segmentation": "off",
+                          "tx_tcp6_segmentation": "on",
+                          "generic_segmentation_offload": "on",
+                          "generic_receive_offload": "on",
+                          "large_receive_offload": "off [fixed]",
+                          "rx_vlan_offload": "off [fixed]",
+                          "tx_vlan_offload": "off [fixed]",
+                          "ntuple_filters": "off [fixed]",
+                          "receive_hashing": "off [fixed]",
+                          "highdma": "on [fixed]",
+                          "rx_vlan_filter": "on [fixed]",
+                          "vlan_challenged": "off [fixed]",
+                          "tx_lockless": "off [fixed]",
+                          "netns_local": "off [fixed]",
+                          "tx_gso_robust": "on [fixed]",
+                          "tx_fcoe_segmentation": "off [fixed]",
+                          "tx_gre_segmentation": "off [fixed]",
+                          "tx_gre_csum_segmentation": "off [fixed]",
+                          "tx_ipxip4_segmentation": "off [fixed]",
+                          "tx_ipxip6_segmentation": "off [fixed]",
+                          "tx_udp_tnl_segmentation": "off [fixed]",
+                          "tx_udp_tnl_csum_segmentation": "off [fixed]",
+                          "tx_gso_partial": "off [fixed]",
+                          "tx_tunnel_remcsum_segmentation": "off [fixed]",
+                          "tx_sctp_segmentation": "off [fixed]",
+                          "tx_esp_segmentation": "off [fixed]",
+                          "tx_udp_segmentation": "off [fixed]",
+                          "tx_gso_list": "off [fixed]",
+                          "fcoe_mtu": "off [fixed]",
+                          "tx_nocache_copy": "off",
+                          "loopback": "off [fixed]",
+                          "rx_fcs": "off [fixed]",
+                          "rx_all": "off [fixed]",
+                          "tx_vlan_stag_hw_insert": "off [fixed]",
+                          "rx_vlan_stag_hw_parse": "off [fixed]",
+                          "rx_vlan_stag_filter": "off [fixed]",
+                          "l2_fwd_offload": "off [fixed]",
+                          "hw_tc_offload": "off [fixed]",
+                          "esp_hw_offload": "off [fixed]",
+                          "esp_tx_csum_hw_offload": "off [fixed]",
+                          "rx_udp_tunnel_port_offload": "off [fixed]",
+                          "tls_hw_tx_offload": "off [fixed]",
+                          "tls_hw_rx_offload": "off [fixed]",
+                          "rx_gro_hw": "on",
+                          "tls_hw_record": "off [fixed]",
+                          "rx_gro_list": "off",
+                          "macsec_hw_offload": "off [fixed]",
+                          "rx_udp_gro_forwarding": "off",
+                          "hsr_tag_ins_offload": "off [fixed]",
+                          "hsr_tag_rm_offload": "off [fixed]",
+                          "hsr_fwd_offload": "off [fixed]",
+                          "hsr_dup_offload": "off [fixed]"
+                        },
+                        "timestamping": [
+                        ],
+                        "hw_timestamp_filters": [
+                        ]
+                      },
+                      "virtual": false,
+                      "link": true,
+                      "identifier": "eth0",
+                      "managed": true,
+                      "primary": true,
+                      "provision": true,
+                      "subnet": "nil",
+                      "subnet6": "nil",
+                      "tag": "nil",
+                      "attached_to": "nil",
+                      "type": "Interface"
+                    }
+                  ],
+                  "location": "Default Location",
+                  "location_title": "Default Location",
+                  "organization": "Default Organization",
+                  "organization_title": "Default Organization",
+                  "domainname": "example.com",
+                  "owner_name": "Full Name",
+                  "owner_email": "username@email.com",
+                  "ssh_authorized_keys": [
+                  ],
+                  "foreman_users": {
+                    "username": {
+                      "firstname": "firstname",
+                      "lastname": "lastname",
+                      "mail": "username@email.com",
+                      "description": "",
+                      "fullname": "Full Name",
+                      "name": "username",
+                      "ssh_authorized_keys": [
+                      ]
+                    }
+                  }
+                },
+                "foreman_ansible_roles": [
+                  "pingrole",
+                  "nonexisting_module_role"
+                ],
+                "ansible_connection": "ssh",
+                "ansible_ssh_private_key_file": "nil",
+                "ansible_winrm_server_cert_validation": "validate",
+                "ansible_user": "root",
+                "ansible_become_method": "sudo",
+                "ansible_port": 22,
+                "ansible_host": "192.168.121.29",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "root",
+                "ansible_roles_check_mode": false,
+                "remote_execution_ssh_user": "root",
+                "remote_execution_effective_user_method": "sudo",
+                "remote_execution_connect_by_ip": true,
+                "host_packages": "",
+                "host_registration_insights": false,
+                "host_registration_remote_execution": true,
+                "test_param2": true,
+                "remote_execution_ssh_keys": [
+                  "ssh-ed25519 remote_execution_ssh_key email@mail.com"
+                ]
+              }
+            }
+          }
+        },
+        "verbosity_level": "0",
+        "remote_execution_command": false,
+        "name": "rhel9-nofar-new-machine.example.com",
+        "check_mode": false,
+        "cleanup_working_dirs": true,
+        "hostname": "192.168.121.29",
+        "script": "---\n- hosts: all\n  pre_tasks:\n    - name: Display all parameters known for the Foreman host\n      debug:\n        var: foreman\n      tags:\n        - always\n  tasks:\n    - name: Apply roles\n      include_role:\n        name: \"{{ role }}\"\n      tags:\n        - always\n      loop: \"{{ foreman_ansible_roles }}\"\n      loop_control:\n        loop_var: role",
+        "execution_timeout_interval": "nil",
+        "secrets": {
+          "ssh_password": "nil",
+          "key_passphrase": "nil",
+          "effective_user_password": "nil",
+          "per-host": {
+            "rhel9-nofar-new-machine.example.com": {
+              "ansible_password": "",
+              "ansible_become_password": ""
+            }
+          }
+        },
+        "use_batch_triggering": true,
+        "use_concurrency_control": false,
+        "first_execution": false,
+        "alternative_names": {
+          "fqdn": "rhel9-nofar-new-machine.example.com"
+        },
+        "connection_options": {
+          "retry_interval": 15,
+          "retry_count": 4,
+          "proxy_batch_triggering": true
+        },
+        "proxy_url": "http://localhost:8000",
+        "proxy_action_name": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction",
+        "current_request_id": "ee2baa3e-ffe6-44e1-a7a1-1c305a82906b",
+        "current_timezone": "Asia/Jerusalem",
+        "current_organization_id": 1,
+        "current_location_id": 2,
+        "current_user_id": 4,
+        "callback": {
+          "task_id": "eb01c2ff-5059-4bbc-90cd-ecc53afd832d",
+          "step_id": 3
+        }
+      },
+      "action_class": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction"
+    }
+  }
+}

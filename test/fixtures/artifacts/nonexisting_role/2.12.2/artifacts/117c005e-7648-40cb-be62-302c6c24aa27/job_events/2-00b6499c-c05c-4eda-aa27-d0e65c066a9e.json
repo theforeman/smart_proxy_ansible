@@ -1,0 +1,1 @@
+{"event": "verbose", "uuid": "00b6499c-c05c-4eda-aa27-d0e65c066a9e", "counter": 2, "stdout": "\u001b[0;35mto new standard, use callbacks_enabled instead. This feature will be removed \u001b[0m", "start_line": 1, "end_line": 2, "runner_ident": "117c005e-7648-40cb-be62-302c6c24aa27", "created": "2023-03-14T10:47:25.142348"}
