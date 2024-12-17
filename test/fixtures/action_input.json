@@ -91,6 +91,7 @@
     "remote_execution_command": true,
     "name": "test-00.example.com",
     "check_mode": false,
+    "job_check_mode": false,
     "hostname": "127.0.0.1",
     "script": "---\n- hosts: all\n  tasks:\n    - shell:\n        cmd: |\n          ls -la /\n      register: out\n    - debug: var=out",
     "execution_timeout_interval": null,
