@@ -22,6 +22,7 @@ module Proxy::Ansible
         @verbosity_level = action_input[:verbosity_level]
         @rex_command = action_input[:remote_execution_command]
         @check_mode = action_input[:check_mode]
+        @diff_mode = action_input[:diff_mode]
         @tags = action_input[:tags]
         @tags_flag = action_input[:tags_flag]
         @passphrase = action_input['secrets']['key_passphrase']
@@ -213,7 +214,7 @@ module Proxy::Ansible
       end
 
       def cmdline
-        cmd_args = [tags_cmd, check_cmd].reject(&:empty?)
+        cmd_args = [tags_cmd, check_cmd, diff_cmd].reject(&:empty?)
         return nil unless cmd_args.any?
         cmd_args.join(' ')
       end
@@ -227,6 +228,10 @@ module Proxy::Ansible
         check_mode? ? '"--check"' : ''
       end
 
+      def diff_cmd
+        diff_mode? ? '"--diff"' : ''
+      end
+
       def verbosity
         '-' + 'v' * @verbosity_level.to_i
       end
@@ -237,6 +242,10 @@ module Proxy::Ansible
 
       def check_mode?
         @check_mode == true && @rex_command == false
+      end
+
+      def diff_mode?
+        @diff_mode == true
       end
 
       def prepare_directory_structure
