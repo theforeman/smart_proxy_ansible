@@ -245,7 +245,7 @@ module Proxy::Ansible
       end
 
       def diff_mode?
-        @diff_mode.nil? ? false : @diff_mode == true
+        @diff_mode == true
       end
 
       def prepare_directory_structure
