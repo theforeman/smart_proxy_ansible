@@ -28,6 +28,7 @@ module Proxy::Ansible
         @passphrase = action_input['secrets']['key_passphrase']
         @execution_timeout_interval = action_input[:execution_timeout_interval]
         @cleanup_working_dirs = action_input.fetch(:cleanup_working_dirs, true)
+        prune_known_hosts_on_first_execution
       end
 
       def start
@@ -261,21 +262,40 @@ module Proxy::Ansible
         logger.debug("[foreman_ansible] - handling event #{description}: #{JSON.pretty_generate(event)}") if logger.level <= ::Logger::DEBUG
       end
 
-      # Each per-host task has inventory only for itself, we must
-      # collect all the partial inventories into one large inventory
-      # containing all the hosts.
+      # Rebuilds a unified Ansible inventory from multiple per-host inventories.
+      # @param input [Hash] The input hash mapping hostnames to inventory data.
+      # @return [Hash] The merged inventory.
       def rebuild_inventory(input)
-        action_inputs = input.values.map { |hash| hash[:input][:action_input] }
-        inventories = action_inputs.map { |hash| hash[:ansible_inventory] }
-        host_vars = inventories.map { |i| i['_meta']['hostvars'] }.reduce({}) do |acc, hosts|
-          hosts.reduce(acc) do |inner_acc, (hostname, vars)|
+        action_inputs = input.values.map { |entry| entry['input']['action_input'] }
+        inventories = action_inputs.map { |action_input| action_input['ansible_inventory'] }
+        first_execution_by_host = action_inputs.to_h { |action_input| [action_input['name'], action_input['first_execution']] }
+
+        host_vars = merge_hostvars_from_inventories(inventories)
+
+        # Use the first inventory's group vars as a base, fallback to empty hash if missing
+        group_vars = inventories.first.dig('all', 'vars') || {}
+
+        inventory = {
+          'all' => {
+            'hosts' => host_vars,
+            'vars' => group_vars
+          }
+        }
+
+        update_first_execution_flags(inventory['all']['hosts'], first_execution_by_host)
+
+        inventory
+      end
+
+      # Helper: Merges hostvars from a list of inventories, ensuring ssh key is set.
+      def merge_hostvars_from_inventories(inventories)
+        inventories.each_with_object({}) do |inventory, acc|
+          inventory.dig('_meta', 'hostvars')&.each do |hostname, vars|
+            # Ensure the ssh key is set for each host
             vars[:ansible_ssh_private_key_file] ||= Proxy::RemoteExecution::Ssh::Plugin.settings[:ssh_identity_key_file]
-            inner_acc.merge(hostname => vars)
+            acc[hostname] = vars
           end
         end
-
-        { 'all' => { 'hosts' => host_vars,
-                     'vars' => inventories.first['all']['vars'] } }
       end
 
       def working_dir
@@ -302,6 +322,57 @@ module Proxy::Ansible
         end
 
         inventory
+      end
+
+      # Removes known hosts entries for hosts marked as 'first_execution' in the inventory.
+      # This ensures SSH host key checking does not fail on first connection.
+      # @return [void]
+      def prune_known_hosts_on_first_execution
+        @inventory.dig('all', 'hosts')&.each_value do |host_data|
+          next unless host_data.dig("foreman", "first_execution")
+
+          interface = host_data.dig("foreman", "foreman_interfaces", 0)
+          next unless interface
+
+          extract_host_identifiers(interface, host_data).each do |host|
+            extract_ports(host_data).each do |port|
+              Proxy::RemoteExecution::Utils.prune_known_hosts!(host, port, logger)
+            end
+          end
+        end
+      end
+
+      private
+
+      # Updates the 'first_execution' flag in the foreman data for each host in the inventory.
+      # @param hosts [Hash] hostname => host data hash
+      # @param execution_flags [Hash] hostname => boolean (first_execution)
+      # @return [void]
+      def update_first_execution_flags(hosts, execution_flags)
+        hosts.each do |hostname, vars|
+          foreman = vars['foreman']
+          next unless foreman
+
+          if execution_flags.key?(hostname)
+            foreman['first_execution'] = execution_flags[hostname]
+          end
+        end
+      end
+
+      def extract_host_identifiers(interface, host_data)
+        [
+          interface["ip"],
+          interface["ip6"],
+          host_data["ansible_host"],
+          interface["name"]
+        ].compact.uniq
+      end
+
+      def extract_ports(host_data)
+        [
+          host_data["ansible_ssh_port"],
+          host_data["ansible_port"]
+        ].compact.uniq
       end
     end
   end

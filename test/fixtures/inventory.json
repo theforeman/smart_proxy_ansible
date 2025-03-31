@@ -1,0 +1,221 @@
+{
+  "all": {
+    "hosts": {
+      "hostkeys-clone.local.test": {
+        "foreman": {
+          "foreman_hostname": "hostkeys-clone",
+          "foreman_fqdn": "hostkeys-clone.local.test",
+          "root_pw": "$6$dummy$notarealpasswordhash",
+          "foreman_subnets": [
+            {
+              "name": "ipv6_subnet",
+              "network": "2001:db8:1::1",
+              "mask": "ffff:ff00::",
+              "gateway": "",
+              "dns_primary": "",
+              "dns_secondary": "",
+              "from": "",
+              "to": "",
+              "boot_mode": "DHCP",
+              "ipam": "None",
+              "vlanid": null,
+              "mtu": 1500,
+              "nic_delay": null,
+              "network_type": "IPv6",
+              "description": ""
+            }
+          ],
+          "foreman_interfaces": [
+            {
+              "ip": "156.168.121.32",
+              "ip6": "2001:db7:1:1234:abcd:5678:90ab:cde9",
+              "mac": "52:54:00:bc:c1:59",
+              "name": "hostkeys-clone.local.test",
+              "attrs": {},
+              "virtual": false,
+              "link": true,
+              "identifier": "",
+              "managed": true,
+              "primary": true,
+              "provision": true,
+              "subnet": null,
+              "subnet6": {
+                "name": "ipv6_subnet",
+                "network": "2001:db8:1::1",
+                "mask": "ffff:ff00::",
+                "gateway": "",
+                "dns_primary": "",
+                "dns_secondary": "",
+                "from": "",
+                "to": "",
+                "boot_mode": "DHCP",
+                "ipam": "None",
+                "vlanid": null,
+                "mtu": 1500,
+                "nic_delay": null,
+                "network_type": "IPv6",
+                "description": ""
+              },
+              "tag": null,
+              "attached_to": null,
+              "type": "Interface"
+            }
+          ],
+          "location": "Default Location",
+          "location_title": "Default Location",
+          "organization": "Default Organization",
+          "organization_title": "Default Organization",
+          "domainname": "local.test",
+          "foreman_domain_description": "",
+          "owner_name": "Admin User",
+          "owner_email": "root@localdomain.net",
+          "ssh_authorized_keys": [],
+          "foreman_users": {
+            "admin": {
+              "firstname": "Admin",
+              "lastname": "User",
+              "mail": "root@localdomain.net",
+              "description": null,
+              "fullname": "Admin User",
+              "name": "admin",
+              "ssh_authorized_keys": []
+            }
+          },
+          "server_ca": null,
+          "ssl_ca": "-----BEGIN CERTIFICATE-----\nHRMBAf8ECDAGAQH/AgEBMB0GA1UdDgQWBBSQhKfSG1u/h/nutC3s7HiguYH2uzAK\nBggqhkjOPQQDAgNIADBFAiEAj/8ml5IqZmxb1Q93vPmAVafo6DnhN20jPc3kzdcj\nYg0CIH29gvAmLzxFkpHOFDOCdS+4hszszYrGXnXtbASf0HZS\n-----END CERTIFICATE-----\n",
+          "first_execution": true
+        },
+        "foreman_ansible_roles": [],
+        "ansible_connection": "ssh",
+        "ansible_ssh_private_key_file": "~/.ssh/id_rsa_foreman_proxy",
+        "ansible_winrm_server_cert_validation": "validate",
+        "ansible_user": "root",
+        "ansible_become_method": "sudo",
+        "ansible_port": 22,
+        "ansible_host": "156.168.121.32",
+        "ansible_ssh_port": 22,
+        "ansible_ssh_user": "root",
+        "ansible_roles_check_mode": false,
+        "remote_execution_ssh_user": "root",
+        "remote_execution_effective_user_method": "sudo",
+        "remote_execution_connect_by_ip": true,
+        "host_packages": "",
+        "host_registration_insights": false,
+        "host_registration_remote_execution": true,
+        "remote_execution_ssh_keys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDU/== email@gmail.com"
+        ],
+        "ansible_password": null,
+        "ansible_become_password": ""
+      },
+      "hostkeys-keys.local.test": {
+        "foreman": {
+          "foreman_hostname": "hostkeys-keys",
+          "foreman_fqdn": "hostkeys-keys.local.test",
+          "root_pw": "root_pw",
+          "foreman_subnets": [
+            {
+              "name": "ipv6_subnet",
+              "network": "2001:db8:1::1",
+              "mask": "ffff:ff00::",
+              "gateway": "",
+              "dns_primary": "",
+              "dns_secondary": "",
+              "from": "",
+              "to": "",
+              "boot_mode": "DHCP",
+              "ipam": "None",
+              "vlanid": null,
+              "mtu": 1500,
+              "nic_delay": null,
+              "network_type": "IPv6",
+              "description": ""
+            }
+          ],
+          "foreman_interfaces": [
+            {
+              "ip": "154.168.121.32",
+              "ip6": "2001:db7:1:1234:abcd:5678:90ab:cde8",
+              "mac": "52:54:00:bc:c1:49",
+              "name": "hostkeys-keys.local.test",
+              "attrs": {},
+              "virtual": false,
+              "link": true,
+              "identifier": "",
+              "managed": true,
+              "primary": true,
+              "provision": true,
+              "subnet": null,
+              "subnet6": {
+                "name": "ipv6_subnet",
+                "network": "2001:db8:1::1",
+                "mask": "ffff:ff00::",
+                "gateway": "",
+                "dns_primary": "",
+                "dns_secondary": "",
+                "from": "",
+                "to": "",
+                "boot_mode": "DHCP",
+                "ipam": "None",
+                "vlanid": null,
+                "mtu": 1500,
+                "nic_delay": null,
+                "network_type": "IPv6",
+                "description": ""
+              },
+              "tag": null,
+              "attached_to": null,
+              "type": "Interface"
+            }
+          ],
+          "location": "Default Location",
+          "location_title": "Default Location",
+          "organization": "Default Organization",
+          "organization_title": "Default Organization",
+          "domainname": "local.test",
+          "foreman_domain_description": "",
+          "owner_name": "Admin User",
+          "owner_email": "root@localdomain.net",
+          "ssh_authorized_keys": [],
+          "foreman_users": {
+            "admin": {
+              "firstname": "Admin",
+              "lastname": "User",
+              "mail": "root@localdomain.net",
+              "description": null,
+              "fullname": "Admin User",
+              "name": "admin",
+              "ssh_authorized_keys": []
+            }
+          },
+          "server_ca": null,
+          "ssl_ca": "-----BEGIN CERTIFICATE-----\nHRMBAf8ECDAGAQH/AgEBMB0GA1UdDgQWBBSQhKfSG1u/h/nutC3s7HiguYH2uzAK\nBggqhkjOPQQDAgNIADBFAiEAj/8ml5IqZmxb1Q93vPmAVafo6DnhN20jPc3kzdcj\nYg0CIH29gvAmLzxFkpHOFDOCdS+4hszszYrGXnXtbASf0HZS\n-----END CERTIFICATE-----\n",
+          "first_execution": false
+        },
+        "foreman_ansible_roles": [],
+        "ansible_connection": "ssh",
+        "ansible_ssh_private_key_file": "~/.ssh/id_rsa_foreman_proxy",
+        "ansible_winrm_server_cert_validation": "validate",
+        "ansible_user": "root",
+        "ansible_become_method": "sudo",
+        "ansible_port": 22,
+        "ansible_host": "clone-ansible-host-test",
+        "ansible_ssh_port": 22,
+        "ansible_ssh_user": "root",
+        "ansible_roles_check_mode": false,
+        "remote_execution_ssh_user": "root",
+        "remote_execution_effective_user_method": "sudo",
+        "remote_execution_connect_by_ip": true,
+        "host_packages": "",
+        "host_registration_insights": false,
+        "host_registration_remote_execution": true,
+        "remote_execution_ssh_keys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDU/== email@gmail.com"
+        ],
+        "ansible_password": null,
+        "ansible_become_password": ""
+      }
+    },
+    "vars": {}
+  }
+}

@@ -1,0 +1,348 @@
+{
+  "host2.example.com.local.test": {
+    "execution_plan_id": "60b7cc85-f23a-46d5-b88b-8582cdf78504",
+    "run_step_id": 2,
+    "input": {
+      "action_input": {
+        "proxy_operation_name": "ansible-runner",
+        "time_to_pickup": 86400,
+        "tags": "",
+        "tags_flag": "include",
+        "ansible_inventory": {
+          "all": {
+            "hosts": [
+              "host2.example.com.local.test"
+            ],
+            "vars": {}
+          },
+          "_meta": {
+            "hostvars": {
+              "host2.example.com.local.test": {
+                "foreman": {
+                  "foreman_hostname": "host2.example.com",
+                  "foreman_fqdn": "host2.example.com.local.test",
+                  "root_pw": "$6$dummy$notarealpasswordhash",
+                  "foreman_subnets": [
+                    {
+                      "name": "ipv6_subnet",
+                      "network": "2001:db8:1::1",
+                      "mask": "ffff:ff00::",
+                      "gateway": "",
+                      "dns_primary": "",
+                      "dns_secondary": "",
+                      "from": "",
+                      "to": "",
+                      "boot_mode": "DHCP",
+                      "ipam": "None",
+                      "vlanid": null,
+                      "mtu": 1500,
+                      "nic_delay": null,
+                      "network_type": "IPv6",
+                      "description": ""
+                    }
+                  ],
+                  "foreman_interfaces": [
+                    {
+                      "ip": "156.168.121.32",
+                      "ip6": "2001:db7:1:1234:abcd:5678:90ab:cde9",
+                      "mac": "52:54:00:bc:c1:59",
+                      "name": "host2.example.com.local.test",
+                      "attrs": {},
+                      "virtual": false,
+                      "link": true,
+                      "identifier": "",
+                      "managed": true,
+                      "primary": true,
+                      "provision": true,
+                      "subnet": null,
+                      "subnet6": {
+                        "name": "ipv6_subnet",
+                        "network": "2001:db8:1::1",
+                        "mask": "ffff:ff00::",
+                        "gateway": "",
+                        "dns_primary": "",
+                        "dns_secondary": "",
+                        "from": "",
+                        "to": "",
+                        "boot_mode": "DHCP",
+                        "ipam": "None",
+                        "vlanid": null,
+                        "mtu": 1500,
+                        "nic_delay": null,
+                        "network_type": "IPv6",
+                        "description": ""
+                      },
+                      "tag": null,
+                      "attached_to": null,
+                      "type": "Interface"
+                    }
+                  ],
+                  "location": "Default Location",
+                  "location_title": "Default Location",
+                  "organization": "Default Organization",
+                  "organization_title": "Default Organization",
+                  "domainname": "local.test",
+                  "foreman_domain_description": "",
+                  "owner_name": "Admin User",
+                  "owner_email": "root@localdomain.net",
+                  "ssh_authorized_keys": [],
+                  "foreman_users": {
+                    "admin": {
+                      "firstname": "Admin",
+                      "lastname": "User",
+                      "mail": "root@localdomain.net",
+                      "description": null,
+                      "fullname": "Admin User",
+                      "name": "admin",
+                      "ssh_authorized_keys": []
+                    }
+                  },
+                  "server_ca": null,
+                  "ssl_ca": "-----BEGIN CERTIFICATE-----\nHRMBAf8ECDAGAQH/AgEBMB0GA1UdDgQWBBSQhKfSG1u/h/nutC3s7HiguYH2uzAK\nBggqhkjOPQQDAgNIADBFAiEAj/8ml5IqZmxb1Q93vPmAVafo6DnhN20jPc3kzdcj\nYg0CIH29gvAmLzxFkpHOFDOCdS+4hszszYrGXnXtbASf0HZS\n-----END CERTIFICATE-----\n",
+                  "first_execution": true
+                },
+                "foreman_ansible_roles": [],
+                "ansible_connection": "ssh",
+                "ansible_ssh_private_key_file": "~/.ssh/id_rsa_foreman_proxy",
+                "ansible_winrm_server_cert_validation": "validate",
+                "ansible_user": "root",
+                "ansible_become_method": "sudo",
+                "ansible_port": 22,
+                "ansible_host": "156.168.121.32",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "root",
+                "ansible_roles_check_mode": false,
+                "remote_execution_ssh_user": "root",
+                "remote_execution_effective_user_method": "sudo",
+                "remote_execution_connect_by_ip": true,
+                "host_packages": "",
+                "host_registration_insights": false,
+                "host_registration_remote_execution": true,
+                "remote_execution_ssh_keys": [
+                  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDU/== email@gmail.com"
+                ],
+                "ansible_password": null,
+                "ansible_become_password": ""
+              }
+            }
+          }
+        },
+        "verbosity_level": "4",
+        "remote_execution_command": false,
+        "name": "host2.example.com.local.test",
+        "check_mode": false,
+        "job_check_mode": true,
+        "cleanup_working_dirs": true,
+        "hostname": "156.168.121.32",
+        "script": "---\n- hosts: all\n  pre_tasks:\n    - name: Display all parameters known for the Foreman host\n      debug:\n        var: foreman\n      tags:\n        - always\n  tasks:\n    - name: Apply roles\n      include_role:\n        name: \"{{ role }}\"\n      tags:\n        - always\n      loop: \"{{ foreman_ansible_roles }}\"\n      loop_control:\n        loop_var: role",
+        "execution_timeout_interval": null,
+        "secrets": {
+          "ssh_password": null,
+          "key_passphrase": null,
+          "effective_user_password": null,
+          "per-host": {
+            "host2.example.com.local.test": {
+              "ansible_password": null,
+              "ansible_become_password": ""
+            }
+          }
+        },
+        "use_batch_triggering": true,
+        "first_execution": true,
+        "alternative_names": {
+          "fqdn": "host2.example.com.local.test"
+        },
+        "connection_options": {
+          "retry_interval": 15,
+          "retry_count": 4,
+          "proxy_batch_triggering": true
+        },
+        "proxy_url": "http://localhost:8000",
+        "proxy_action_name": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction",
+        "current_request_id": "7ed8b66b-4b21-4979-8068-f44399c9e86f",
+        "current_timezone": "Asia/Jerusalem",
+        "current_organization_id": null,
+        "current_location_id": null,
+        "current_user_id": 4,
+        "callback": {
+          "task_id": "d5e82140-4439-4fe4-9fe2-fcdfdfb7bbda",
+          "step_id": 3
+        }
+      },
+      "action_class": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction"
+    }
+  },
+  "host1.example.com.local.test": {
+    "execution_plan_id": "ae547530-20ad-4ee2-9c3e-050c74294104",
+    "run_step_id": 2,
+    "input": {
+      "action_input": {
+        "proxy_operation_name": "ansible-runner",
+        "time_to_pickup": 86400,
+        "tags": "",
+        "tags_flag": "include",
+        "ansible_inventory": {
+          "all": {
+            "hosts": [
+              "host1.example.com.local.test"
+            ],
+            "vars": {}
+          },
+          "_meta": {
+            "hostvars": {
+              "host1.example.com.local.test": {
+                "foreman": {
+                  "foreman_hostname": "host1.example.com",
+                  "foreman_fqdn": "host1.example.com.local.test",
+                  "root_pw": "$6$dummy$notarealpasswordhash",
+                  "foreman_subnets": [
+                    {
+                      "name": "ipv6_subnet",
+                      "network": "2001:db8:1::1",
+                      "mask": "ffff:ff00::",
+                      "gateway": "",
+                      "dns_primary": "",
+                      "dns_secondary": "",
+                      "from": "",
+                      "to": "",
+                      "boot_mode": "DHCP",
+                      "ipam": "None",
+                      "vlanid": null,
+                      "mtu": 1500,
+                      "nic_delay": null,
+                      "network_type": "IPv6",
+                      "description": ""
+                    }
+                  ],
+                  "foreman_interfaces": [
+                    {
+                      "ip": "154.168.121.32",
+                      "ip6": "2001:db7:1:1234:abcd:5678:90ab:cde8",
+                      "mac": "52:54:00:bc:c1:49",
+                      "name": "host1.example.com.local.test",
+                      "attrs": {},
+                      "virtual": false,
+                      "link": true,
+                      "identifier": "",
+                      "managed": true,
+                      "primary": true,
+                      "provision": true,
+                      "subnet": null,
+                      "subnet6": {
+                        "name": "ipv6_subnet",
+                        "network": "2001:db8:1::1",
+                        "mask": "ffff:ff00::",
+                        "gateway": "",
+                        "dns_primary": "",
+                        "dns_secondary": "",
+                        "from": "",
+                        "to": "",
+                        "boot_mode": "DHCP",
+                        "ipam": "None",
+                        "vlanid": null,
+                        "mtu": 1500,
+                        "nic_delay": null,
+                        "network_type": "IPv6",
+                        "description": ""
+                      },
+                      "tag": null,
+                      "attached_to": null,
+                      "type": "Interface"
+                    }
+                  ],
+                  "location": "Default Location",
+                  "location_title": "Default Location",
+                  "organization": "Default Organization",
+                  "organization_title": "Default Organization",
+                  "domainname": "local.test",
+                  "foreman_domain_description": "",
+                  "owner_name": "Admin User",
+                  "owner_email": "root@localdomain.net",
+                  "ssh_authorized_keys": [],
+                  "foreman_users": {
+                    "admin": {
+                      "firstname": "Admin",
+                      "lastname": "User",
+                      "mail": "root@localdomain.net",
+                      "description": null,
+                      "fullname": "Admin User",
+                      "name": "admin",
+                      "ssh_authorized_keys": []
+                    }
+                  },
+                  "server_ca": null,
+                  "ssl_ca": "-----BEGIN CERTIFICATE-----\nHRMBAf8ECDAGAQH/AgEBMB0GA1UdDgQWBBSQhKfSG1u/h/nutC3s7HiguYH2uzAK\nBggqhkjOPQQDAgNIADBFAiEAj/8ml5IqZmxb1Q93vPmAVafo6DnhN20jPc3kzdcj\nYg0CIH29gvAmLzxFkpHOFDOCdS+4hszszYrGXnXtbASf0HZS\n-----END CERTIFICATE-----\n",
+                  "first_execution": false
+                },
+                "foreman_ansible_roles": [],
+                "ansible_connection": "ssh",
+                "ansible_ssh_private_key_file": "~/.ssh/id_rsa_foreman_proxy",
+                "ansible_winrm_server_cert_validation": "validate",
+                "ansible_user": "root",
+                "ansible_become_method": "sudo",
+                "ansible_port": 22,
+                "ansible_host": "clone-ansible-host-test",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "root",
+                "ansible_roles_check_mode": false,
+                "remote_execution_ssh_user": "root",
+                "remote_execution_effective_user_method": "sudo",
+                "remote_execution_connect_by_ip": true,
+                "host_packages": "",
+                "host_registration_insights": false,
+                "host_registration_remote_execution": true,
+                "remote_execution_ssh_keys": [
+                  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDU/== email@gmail.com"
+                ],
+                "ansible_password": null,
+                "ansible_become_password": ""
+              }
+            }
+          }
+        },
+        "verbosity_level": "4",
+        "remote_execution_command": false,
+        "name": "host1.example.com.local.test",
+        "check_mode": false,
+        "job_check_mode": true,
+        "cleanup_working_dirs": true,
+        "hostname": "154.168.121.32",
+        "script": "---\n- hosts: all\n  pre_tasks:\n    - name: Display all parameters known for the Foreman host\n      debug:\n        var: foreman\n      tags:\n        - always\n  tasks:\n    - name: Apply roles\n      include_role:\n        name: \"{{ role }}\"\n      tags:\n        - always\n      loop: \"{{ foreman_ansible_roles }}\"\n      loop_control:\n        loop_var: role",
+        "execution_timeout_interval": null,
+        "secrets": {
+          "ssh_password": null,
+          "key_passphrase": null,
+          "effective_user_password": null,
+          "per-host": {
+            "host1.example.com.local.test": {
+              "ansible_password": null,
+              "ansible_become_password": ""
+            }
+          }
+        },
+        "use_batch_triggering": true,
+        "first_execution": false,
+        "alternative_names": {
+          "fqdn": "host1.example.com.local.test"
+        },
+        "connection_options": {
+          "retry_interval": 15,
+          "retry_count": 4,
+          "proxy_batch_triggering": true
+        },
+        "proxy_url": "http://localhost:8000",
+        "proxy_action_name": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction",
+        "current_request_id": "7ed8b66b-4b21-4979-8068-f44399c9e86f",
+        "current_timezone": "Asia/Jerusalem",
+        "current_organization_id": null,
+        "current_location_id": null,
+        "current_user_id": 4,
+        "callback": {
+          "task_id": "9c0dae04-3ac6-4290-86d2-4d05c215a3e3",
+          "step_id": 3
+        }
+      },
+      "action_class": "Proxy::Ansible::TaskLauncher::Playbook::PlaybookRunnerAction"
+    }
+  }
+}
