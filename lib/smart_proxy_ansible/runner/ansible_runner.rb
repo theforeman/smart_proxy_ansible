@@ -28,6 +28,7 @@ module Proxy::Ansible
         @passphrase = action_input['secrets']['key_passphrase']
         @execution_timeout_interval = action_input[:execution_timeout_interval]
         @cleanup_working_dirs = action_input.fetch(:cleanup_working_dirs, true)
+        prune_known_hosts_on_first_execution(input.values)
       end
 
       def start
@@ -302,6 +303,29 @@ module Proxy::Ansible
         end
 
         inventory
+      end
+
+      def prune_known_hosts_on_first_execution(hosts)
+        hosts.each do |value|
+          action_input = value[:input][:action_input]
+          next unless action_input.fetch(:first_execution, false)
+
+          hostname = action_input.fetch(:name)
+          host_ip = action_input.fetch(:hostname)
+          ansible_host = fetch_ansible_host_attribute(action_input, hostname, "ansible_host")
+          ssh_port = action_input.fetch(:ansible_ssh_port, 22)
+          ansible_port = fetch_ansible_host_attribute(action_input, hostname, "ansible_port") || 22
+
+          [host_ip, ansible_host].compact.uniq.each do |host|
+            [ssh_port, ansible_port].uniq.each do |port|
+              Proxy::RemoteExecution::Utils.prune_known_hosts!(host, port, logger)
+            end
+          end
+        end
+      end
+
+      def fetch_ansible_host_attribute(data, hostname, attribute)
+        data.dig("ansible_inventory", "_meta", "hostvars", hostname, attribute)
       end
     end
   end
