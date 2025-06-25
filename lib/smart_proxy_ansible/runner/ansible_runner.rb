@@ -129,7 +129,7 @@ module Proxy::Ansible
 
       def handle_host_event(hostname, event)
         log_event("for host: #{hostname.inspect}", event)
-        publish_data_for(hostname, event['stdout'] + "\n", 'stdout') if event['stdout']
+        publish_data_for(hostname, event['stdout'] + "\n", 'stdout', id: event['uuid'], timestamp: event['created']) if event['stdout']
         case event['event']
         when 'runner_on_ok'
           publish_exit_status_for(hostname, 0) if @exit_statuses[hostname].nil?
@@ -155,11 +155,11 @@ module Proxy::Ansible
             host = inventory_hosts.find { |host| row =~ /#{host}/ }
             line = row + "\n"
             unless host
-              broadcast_data(line, 'stdout')
+              broadcast_data(line, 'stdout', id: event['uuid'], timestamp: event['created'])
               next
             end
 
-            publish_data_for(host, line, 'stdout')
+            publish_data_for(host, line, 'stdout', id: event['uuid'], timestamp: event['created'])
 
             # If the task has been rescued, it won't consider a failure
             if @exit_statuses[host].to_i != 0 && failures[host].to_i <= 0 && unreachable[host].to_i <= 0 && rescued[host].to_i > 0
@@ -167,7 +167,7 @@ module Proxy::Ansible
             end
           end
         else
-          broadcast_data(event['stdout'] + "\n", 'stdout')
+          broadcast_data(event['stdout'] + "\n", 'stdout', id: event['uuid'], timestamp: event['created'])
         end
 
         # If the run ends early due to an error - fail all other tasks
