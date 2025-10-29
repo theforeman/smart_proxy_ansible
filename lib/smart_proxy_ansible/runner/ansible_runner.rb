@@ -24,6 +24,7 @@ module Proxy::Ansible
         @check_mode = action_input[:check_mode]
         @job_check_mode = action_input[:job_check_mode]
         @diff_mode = action_input[:diff_mode]
+        @job_diff_mode = action_input[:job_diff_mode]
         @tags = action_input[:tags]
         @tags_flag = action_input[:tags_flag]
         @passphrase = action_input['secrets']['key_passphrase']
@@ -235,7 +236,11 @@ module Proxy::Ansible
       end
 
       def diff_cmd
-        diff_mode? ? '"--diff"' : ''
+        if diff_mode? || job_diff_mode?
+          '"--diff"'
+        else
+          ''
+        end
       end
 
       def verbosity
@@ -256,6 +261,10 @@ module Proxy::Ansible
 
       def diff_mode?
         @diff_mode == true
+      end
+
+      def job_diff_mode?
+        @job_diff_mode == true
       end
 
       def prepare_directory_structure
