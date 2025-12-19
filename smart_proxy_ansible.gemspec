@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.test_files       = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths    = ['lib']
   gem.license = 'GPL-3.0-only'
-  gem.required_ruby_version = '>= 2.7'
+  gem.required_ruby_version = '>= 3.0'
 
   gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_runtime_dependency('smart_proxy_dynflow', '~> 0.8')
