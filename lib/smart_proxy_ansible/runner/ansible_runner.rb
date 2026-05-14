@@ -79,6 +79,14 @@ module Proxy::Ansible
         @process_manager.stdin.close unless @process_manager.done?
       end
 
+      def set_process_manager_callbacks(pm)
+        super
+        pm.on_stderr do |data|
+          broadcast_data(data, 'stderr')
+          ''
+        end
+      end
+
       private
 
       def process_artifacts
