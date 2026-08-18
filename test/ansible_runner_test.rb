@@ -28,6 +28,39 @@ module Proxy::Ansible
         end
       end
 
+      describe '#kill' do
+        let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
+        let(:hosts) { ['host1.example.com', 'host2.example.com'] }
+
+        test 'marks every host failed before publishing exit statuses' do
+          expected_exit_statuses = hosts.to_h { |host| [host, 2] }
+          runner.instance_variable_set(:@process_manager, stub(:pid => 1234))
+          runner.instance_variable_set(:@inventory, { 'all' => { 'hosts' => hosts.to_h { |host| [host, {}] } } })
+          runner.instance_variable_set(:@exit_statuses, hosts.to_h { |host| [host, 0] })
+
+          ::Process.expects(:kill).with('SIGTERM', 1234)
+          runner.expects(:publish_exit_status).with do |status|
+            status == 2 && runner.instance_variable_get(:@exit_statuses) == expected_exit_statuses
+          end
+          runner.expects(:broadcast_data).never
+          runner.expects(:close)
+
+          runner.kill
+        end
+      end
+
+      describe '#timeout' do
+        let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
+
+        test 'broadcasts the timeout message before killing the job' do
+          runner.stubs(:logger).returns(stub(:debug => nil))
+          runner.expects(:broadcast_data).with('Timeout for execution passed, stopping the job', 'stderr')
+          runner.expects(:kill)
+
+          runner.timeout
+        end
+      end
+
       describe '#rebuild_secrets' do
         let(:inventory) { { 'all' => { 'hosts' => { 'foreman.example.com' => {} } } } }
         let(:host_secrets) { { 'ansible_password' => 'letmein', 'ansible_become_password' => 'iamroot' } }

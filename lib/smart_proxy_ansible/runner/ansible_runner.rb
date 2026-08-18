@@ -48,6 +48,7 @@ module Proxy::Ansible
 
       def timeout
         logger.debug('job timed out')
+        broadcast_data('Timeout for execution passed, stopping the job', 'stderr')
         super
       end
 
@@ -57,9 +58,8 @@ module Proxy::Ansible
 
       def kill
         ::Process.kill('SIGTERM', @process_manager.pid)
+        @inventory['all']['hosts'].each_key { |hostname| @exit_statuses[hostname] = 2 }
         publish_exit_status(2)
-        @inventory['all']['hosts'].each { |hostname| @exit_statuses[hostname] = 2 }
-        broadcast_data('Timeout for execution passed, stopping the job', 'stderr')
         close
       end
 
