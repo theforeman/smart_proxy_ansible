@@ -61,6 +61,54 @@ module Proxy::Ansible
         end
       end
 
+      describe 'task output routing' do
+        let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
+        let(:hostname) { 'host-a.example.com' }
+        let(:task_uuid) { 'task-uuid' }
+        let(:created) { '2026-08-19T12:00:00.000000+00:00' }
+
+        before do
+          runner.stubs(:log_event)
+          runner.stubs(:publish_exit_status_for)
+          runner.instance_variable_set(:@exit_statuses, hostname => nil)
+        end
+
+        test 'publishes a task heading only for hosts running the task' do
+          published = []
+          runner.define_singleton_method(:publish_data_for) do |host, output, *_args|
+            published << [host, output]
+          end
+          runner.expects(:broadcast_data).never
+
+          runner.send(:handle_broadcast_data, {
+            'event' => 'playbook_on_task_start',
+            'event_data' => { 'task_uuid' => task_uuid },
+            'stdout' => 'TASK [host-a role]',
+            'uuid' => 'heading-uuid',
+            'created' => created
+          })
+          runner.send(:handle_host_event, hostname, {
+            'event' => 'runner_on_start',
+            'event_data' => { 'host' => hostname, 'task_uuid' => task_uuid },
+            'stdout' => nil,
+            'uuid' => 'start-uuid',
+            'created' => created
+          })
+          runner.send(:handle_host_event, hostname, {
+            'event' => 'runner_on_ok',
+            'event_data' => { 'host' => hostname, 'task_uuid' => task_uuid },
+            'stdout' => 'ok: [host-a.example.com]',
+            'uuid' => 'result-uuid',
+            'created' => created
+          })
+
+          assert_equal [
+            [hostname, "TASK [host-a role]\n"],
+            [hostname, "ok: [host-a.example.com]\n"]
+          ], published
+        end
+      end
+
       describe '#rebuild_secrets' do
         let(:inventory) { { 'all' => { 'hosts' => { 'foreman.example.com' => {} } } } }
         let(:host_secrets) { { 'ansible_password' => 'letmein', 'ansible_become_password' => 'iamroot' } }

@@ -130,6 +130,7 @@ module Proxy::Ansible
 
       def handle_host_event(hostname, event)
         log_event("for host: #{hostname.inspect}", event)
+        publish_task_output_for(hostname, event)
         publish_data_for(hostname, event['stdout'] + "\n", 'stdout', id: event['uuid'], timestamp: parse_timestamp(event['created'])) if event['stdout']
         case event['event']
         when 'runner_on_ok'
@@ -143,7 +144,9 @@ module Proxy::Ansible
 
       def handle_broadcast_data(event)
         log_event("broadcast", event)
-        if event['event'] == 'playbook_on_stats'
+        if event['event'] == 'playbook_on_task_start' && remember_task_output(event)
+          # The following host events identify which hosts this task applies to.
+        elsif event['event'] == 'playbook_on_stats'
           failures = event.dig('event_data', 'failures') || {}
           unreachable = event.dig('event_data', 'dark') || {}
           rescued = event.dig('event_data', 'rescued') || {}
@@ -177,6 +180,38 @@ module Proxy::Ansible
             @exit_statuses[host] = 4 if @exit_statuses[host].to_i == 0
           end
         end
+      end
+
+      def remember_task_output(event)
+        task_uuid = event.dig('event_data', 'task_uuid')
+        return false unless task_uuid && event['stdout']
+
+        @task_outputs ||= {}
+        @task_outputs[task_uuid] = {
+          'stdout' => event['stdout'],
+          'uuid' => event['uuid'],
+          'created' => event['created']
+        }
+        true
+      end
+
+      def publish_task_output_for(hostname, event)
+        task_uuid = event.dig('event_data', 'task_uuid')
+        task_output = @task_outputs&.fetch(task_uuid, nil)
+        return unless task_output
+
+        @published_task_outputs ||= {}
+        output_key = [hostname, task_uuid]
+        return if @published_task_outputs[output_key]
+
+        publish_data_for(
+          hostname,
+          task_output['stdout'] + "\n",
+          'stdout',
+          :id => task_output['uuid'],
+          :timestamp => parse_timestamp(task_output['created'])
+        )
+        @published_task_outputs[output_key] = true
       end
 
       def write_inventory
