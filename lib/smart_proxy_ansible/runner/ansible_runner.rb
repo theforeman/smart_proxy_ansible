@@ -133,7 +133,9 @@ module Proxy::Ansible
         publish_data_for(hostname, event['stdout'] + "\n", 'stdout', id: event['uuid'], timestamp: parse_timestamp(event['created'])) if event['stdout']
         case event['event']
         when 'runner_on_ok'
-          publish_exit_status_for(hostname, 0) if @exit_statuses[hostname].nil?
+          # Ansible 2.12 can emit a global error for one host and continue
+          # running the playbook successfully on the remaining hosts.
+          publish_exit_status_for(hostname, 0) if [nil, 4].include?(@exit_statuses[hostname])
         when 'runner_on_unreachable'
           publish_exit_status_for(hostname, 1)
         when 'runner_on_failed'
