@@ -6,6 +6,7 @@ module Proxy
     require 'smart_proxy_ansible/version'
     require 'smart_proxy_ansible/configuration_loader'
     require 'smart_proxy_ansible/validate_settings'
+    require 'smart_proxy_ansible/vault_yaml_patch'
     require 'smart_proxy_ansible/plugin'
     require 'smart_proxy_ansible/roles_reader'
     require 'smart_proxy_ansible/playbooks_reader'

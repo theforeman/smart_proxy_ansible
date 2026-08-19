@@ -179,10 +179,27 @@ module Proxy::Ansible
         end
       end
 
+      def normalize_object(obj)
+        if obj.class == Dynflow::Utils::IndifferentHash
+          obj = obj.to_hash
+        end
+
+        case obj
+        when Hash
+          obj.each do |k,v|
+            obj[k] = normalize_object(v)
+          end
+        when Array
+          obj = obj.map {|el| normalize_object(el)}
+        end
+        obj
+      end
+
       def write_inventory
-        File.open(File.join(@root, 'inventory', 'hosts.json'), 'w') do |file|
+        @inventory = normalize_object(@inventory)
+        File.open(File.join(@root, 'inventory', 'hosts.yml'), 'w') do |file|
           file.chmod(0o0640)
-          file.write(JSON.dump(@inventory))
+          file.write(Psych.dump(@inventory))
         end
       end
 
