@@ -4,6 +4,7 @@ require 'yaml'
 require 'smart_proxy_dynflow/runner/process_manager_command'
 require 'smart_proxy_dynflow/runner/base'
 require 'smart_proxy_dynflow/runner/parent'
+require 'smart_proxy_ansible/artifacts_reader'
 module Proxy::Ansible
   module Runner
     class AnsibleRunner < ::Proxy::Dynflow::Runner::Parent
@@ -82,29 +83,20 @@ module Proxy::Ansible
       private
 
       def process_artifacts
-        @counter ||= 1
-        @uuid ||= if (f = Dir["#{@root}/artifacts/*"].first)
-                    File.basename(f)
-                  end
-        return unless @uuid
-        job_event_dir = File.join(@root, 'artifacts', @uuid, 'job_events')
+        @artifacts_reader ||= ArtifactsReader.new(@root)
         loop do
-          files = Dir["#{job_event_dir}/*.json"].map do |file|
-            num = File.basename(file)[/\A\d+/].to_i unless file.include?('partial')
-            [file, num]
-          end
-          files_with_nums = files.select { |(_, num)| num && num >= @counter }.sort_by(&:last)
-          break if files_with_nums.empty?
-          logger.debug("[foreman_ansible] - processing event files: #{files_with_nums.map(&:first).inspect}}")
-          files_with_nums.map(&:first).each { |event_file| handle_event_file(event_file) }
-          @counter = files_with_nums.last.last + 1
+          artifacts = @artifacts_reader.new_artifacts
+          break if artifacts.empty?
+
+          logger.debug("[foreman_ansible] - processing event files: #{artifacts.map(&:path).inspect}")
+          artifacts.each { |artifact| handle_event_file(artifact) }
         end
       end
 
-      def handle_event_file(event_file)
-        logger.debug("[foreman_ansible] - parsing event file #{event_file}")
+      def handle_event_file(artifact)
+        logger.debug("[foreman_ansible] - parsing event file #{artifact.path}")
         begin
-          event = JSON.parse(File.read(event_file))
+          event = JSON.parse(artifact.content)
           if (hostname = hostname_for_event(event))
             handle_host_event(hostname, event)
           else
@@ -112,7 +104,7 @@ module Proxy::Ansible
           end
           true
         rescue JSON::ParserError => e
-          logger.error("[foreman_ansible] - Error parsing runner event at #{event_file}: #{e.class}: #{e.message}")
+          logger.error("[foreman_ansible] - Error parsing runner event at #{artifact.path}: #{e.class}: #{e.message}")
           logger.debug(e.backtrace.join("\n"))
         end
       end
