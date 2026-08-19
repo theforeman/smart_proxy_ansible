@@ -61,6 +61,30 @@ module Proxy::Ansible
         end
       end
 
+      describe '#handle_host_event' do
+        let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
+        let(:hostname) { 'host.example.com' }
+        let(:event) { { 'event' => 'runner_on_ok' } }
+
+        before do
+          runner.stubs(:log_event)
+        end
+
+        test 'marks a host successful when it continues after a global error' do
+          runner.instance_variable_set(:@exit_statuses, hostname => 4)
+          runner.expects(:publish_exit_status_for).with(hostname, 0)
+
+          runner.send(:handle_host_event, hostname, event)
+        end
+
+        test 'does not clear a host failure' do
+          runner.instance_variable_set(:@exit_statuses, hostname => 2)
+          runner.expects(:publish_exit_status_for).never
+
+          runner.send(:handle_host_event, hostname, event)
+        end
+      end
+
       describe '#rebuild_secrets' do
         let(:inventory) { { 'all' => { 'hosts' => { 'foreman.example.com' => {} } } } }
         let(:host_secrets) { { 'ansible_password' => 'letmein', 'ansible_become_password' => 'iamroot' } }
