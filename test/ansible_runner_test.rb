@@ -21,10 +21,26 @@ module Proxy::Ansible
             {"uuid": "a29d8592-f805-4d0e-b73d-7a53cc35a92e", "stdout": " [WARNING]: Consider using the yum module rather than running 'yum'.  If you", "counter": 8, "end_line": 8, "runner_ident": "e2d9ae11-026a-4f9f-9679-401e4b852ab0", "start_line": 7, "event": "verbose"}
           JSON
 
-          File.expects(:read).with('fake.json').returns(content)
+          artifact = ArtifactsReader::Artifact.new(:path => 'fake.json', :content => content)
           runner = AnsibleRunner.allocate
           runner.expects(:handle_broadcast_data)
-          assert runner.send(:handle_event_file, 'fake.json')
+          assert runner.send(:handle_event_file, artifact)
+        end
+      end
+
+      describe '#process_artifacts' do
+        test 'processes event files added while draining the reader' do
+          first = ArtifactsReader::Artifact.new(:path => '1-event.json', :content => '{}')
+          second = ArtifactsReader::Artifact.new(:path => '2-event.json', :content => '{}')
+          reader = mock
+          reader.expects(:new_artifacts).times(3).returns([first], [second], [])
+          runner = AnsibleRunner.allocate
+          runner.instance_variable_set(:@artifacts_reader, reader)
+          runner.stubs(:logger).returns(stub(:debug => nil))
+          runner.expects(:handle_event_file).with(first)
+          runner.expects(:handle_event_file).with(second)
+
+          runner.send(:process_artifacts)
         end
       end
 
