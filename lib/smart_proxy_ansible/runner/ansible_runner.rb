@@ -1,3 +1,4 @@
+require 'set'
 require 'shellwords'
 require 'yaml'
 
@@ -12,6 +13,7 @@ module Proxy::Ansible
 
       # To make this overridable in development
       ENVIRONMENT_WRAPPER = ENV['SMART_PROXY_ANSIBLE_ENVIRONMENT_WRAPPER'] || '/usr/libexec/foreman-proxy/ansible-runner-environment'
+      TASK_HEADING_PATTERN = /\A(?:\r?\n)?(?:TASK|RUNNING HANDLER) \[[^\r\n]+\][^\r\n]*/
 
       def initialize(input, suspended_action:, id: nil)
         super input, :suspended_action => suspended_action, :id => id
@@ -130,6 +132,7 @@ module Proxy::Ansible
 
       def handle_host_event(hostname, event)
         log_event("for host: #{hostname.inspect}", event)
+        publish_task_output_for(hostname, event)
         publish_data_for(hostname, event['stdout'] + "\n", 'stdout', id: event['uuid'], timestamp: parse_timestamp(event['created'])) if event['stdout']
         case event['event']
         when 'runner_on_ok'
@@ -143,7 +146,10 @@ module Proxy::Ansible
 
       def handle_broadcast_data(event)
         log_event("broadcast", event)
-        if event['event'] == 'playbook_on_stats'
+        if task_output_to_remember?(event)
+          remember_task_output(event)
+          # The following host events identify which hosts this task applies to.
+        elsif event['event'] == 'playbook_on_stats'
           failures = event.dig('event_data', 'failures') || {}
           unreachable = event.dig('event_data', 'dark') || {}
           rescued = event.dig('event_data', 'rescued') || {}
@@ -177,6 +183,50 @@ module Proxy::Ansible
             @exit_statuses[host] = 4 if @exit_statuses[host].to_i == 0
           end
         end
+      end
+
+      def task_output_to_remember?(event)
+        event['event'] == 'playbook_on_task_start' &&
+          event.dig('event_data', 'task_uuid') &&
+          !event['stdout'].nil?
+      end
+
+      def remember_task_output(event)
+        task_uuid = event.dig('event_data', 'task_uuid')
+        @task_outputs ||= {}
+        @task_outputs[task_uuid] ||= event.slice('stdout', 'uuid', 'created')
+      end
+
+      def publish_task_output_for(hostname, event)
+        task_uuid = event.dig('event_data', 'task_uuid')
+        task_output = @task_outputs&.fetch(task_uuid, nil)
+        return unless task_output
+
+        @published_task_outputs ||= Set.new
+        output_key = [hostname, task_uuid]
+        return if @published_task_outputs.include?(output_key)
+
+        if task_output['stdout'].empty?
+          task_heading = task_heading_from(event['stdout'])
+          return unless task_heading
+
+          task_output['stdout'] = task_heading
+          @published_task_outputs.add(output_key)
+          return
+        end
+
+        publish_data_for(
+          hostname,
+          task_output['stdout'] + "\n",
+          'stdout',
+          :id => task_output['uuid'],
+          :timestamp => parse_timestamp(task_output['created'])
+        )
+        @published_task_outputs.add(output_key)
+      end
+
+      def task_heading_from(stdout)
+        stdout&.[](TASK_HEADING_PATTERN)
       end
 
       def write_inventory
