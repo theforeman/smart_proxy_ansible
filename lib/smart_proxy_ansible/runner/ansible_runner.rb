@@ -79,6 +79,14 @@ module Proxy::Ansible
         @process_manager.stdin.close unless @process_manager.done?
       end
 
+      def set_process_manager_callbacks(pm)
+        super
+        pm.on_stderr do |data|
+          broadcast_data(data, 'stderr')
+          ''
+        end
+      end
+
       private
 
       def process_artifacts
@@ -207,7 +215,7 @@ module Proxy::Ansible
         env = {}
         env['FOREMAN_CALLBACK_DISABLE'] = '1' if @rex_command
         env['SMART_PROXY_ANSIBLE_ENVIRONMENT_FILE'] = Proxy::Ansible::Plugin.settings[:ansible_environment_file]
-        command = ['ansible-runner', 'run', @root, '-p', 'playbook.yml']
+        command = ['ansible-runner', '-q', 'run', @root, '-p', 'playbook.yml']
         command << '--cmdline' << cmdline unless cmdline.nil?
         command << verbosity if verbose?
 

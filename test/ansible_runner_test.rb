@@ -210,6 +210,46 @@ module Proxy::Ansible
         end
       end
 
+      describe '#set_process_manager_callbacks' do
+        let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
+        let(:process_manager) { mock('process_manager') }
+
+        test 'routes stderr to broadcast_data' do
+          # Parent class sets up stdout and stderr callbacks
+          process_manager.expects(:on_stdout).returns(nil)
+          # Child class overrides stderr callback
+          process_manager.expects(:on_stderr).twice.yields('ansible-runner: command not found')
+          runner.expects(:broadcast_data).with('ansible-runner: command not found', 'stderr')
+          runner.send(:set_process_manager_callbacks, process_manager)
+        end
+      end
+
+      describe '#start_ansible_runner' do
+        let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
+        let(:logger_stub) { stub(:debug => nil) }
+
+        before do
+          runner.stubs(:logger).returns(logger_stub)
+          runner.stubs(:initialize_command)
+          runner.instance_variable_set(:@root, '/tmp/test_root')
+          runner.instance_variable_set(:@rex_command, false)
+          runner.instance_variable_set(:@verbosity_level, 0)
+          runner.instance_variable_set(:@tags, [])
+          runner.instance_variable_set(:@check_mode, false)
+          runner.instance_variable_set(:@job_check_mode, false)
+          runner.instance_variable_set(:@diff_mode, false)
+          Proxy::Ansible::Plugin.stubs(:settings).returns({ ansible_environment_file: '/tmp/env' })
+        end
+
+        test 'includes -q flag to suppress redundant output' do
+          expected_command = ['ansible-runner', '-q', 'run', '/tmp/test_root', '-p', 'playbook.yml']
+          runner.expects(:initialize_command).with do |env, wrapper, *command|
+            command == expected_command
+          end
+          runner.send(:start_ansible_runner)
+        end
+      end
+
       describe '#prune_known_hosts_on_first_execution' do
         let(:runner) { ::Proxy::Ansible::Runner::AnsibleRunner.allocate }
         let(:logger_stub) { stub(:debug => nil, :warn => nil, :error => nil, :level => 1) }
