@@ -107,6 +107,99 @@ module Proxy::Ansible
             [hostname, "ok: [host-a.example.com]\n"]
           ], published
         end
+
+        test 'publishes a delayed task heading for every host with the free strategy' do
+          second_hostname = 'host-b.example.com'
+          task_heading = "\r\nTASK [free task] ***************************************************************"
+          published = []
+          runner.define_singleton_method(:publish_data_for) do |host, output, *_args|
+            published << [host, output]
+          end
+          runner.expects(:broadcast_data).never
+
+          runner.send(:handle_broadcast_data, {
+            'event' => 'playbook_on_task_start',
+            'event_data' => { 'task_uuid' => task_uuid },
+            'stdout' => '',
+            'uuid' => 'heading-uuid',
+            'created' => created
+          })
+          [hostname, second_hostname].each do |host|
+            runner.send(:handle_host_event, host, {
+              'event' => 'runner_on_start',
+              'event_data' => { 'host' => host, 'task_uuid' => task_uuid },
+              'stdout' => nil,
+              'uuid' => "start-#{host}",
+              'created' => created
+            })
+          end
+          runner.send(:handle_host_event, second_hostname, {
+            'event' => 'runner_on_ok',
+            'event_data' => { 'host' => second_hostname, 'task_uuid' => task_uuid },
+            'stdout' => "#{task_heading}\r\nok: [#{second_hostname}]",
+            'uuid' => 'result-host-b',
+            'created' => created
+          })
+          # A later empty task-start event must not overwrite the captured heading.
+          runner.send(:handle_broadcast_data, {
+            'event' => 'playbook_on_task_start',
+            'event_data' => { 'task_uuid' => task_uuid },
+            'stdout' => '',
+            'uuid' => 'heading-uuid-2',
+            'created' => created
+          })
+          runner.send(:handle_host_event, hostname, {
+            'event' => 'runner_on_ok',
+            'event_data' => { 'host' => hostname, 'task_uuid' => task_uuid },
+            'stdout' => "ok: [#{hostname}]",
+            'uuid' => 'result-host-a',
+            'created' => created
+          })
+
+          assert_equal [
+            [second_hostname, "#{task_heading}\r\nok: [#{second_hostname}]\n"],
+            [hostname, "#{task_heading}\n"],
+            [hostname, "ok: [#{hostname}]\n"]
+          ], published
+        end
+
+        test 'publishes a delayed handler heading for every notified host' do
+          second_hostname = 'host-b.example.com'
+          task_heading = "\r\nRUNNING HANDLER [restart service] **********************************************"
+          published = []
+          runner.define_singleton_method(:publish_data_for) do |host, output, *_args|
+            published << [host, output]
+          end
+          runner.expects(:broadcast_data).never
+
+          runner.send(:handle_broadcast_data, {
+            'event' => 'playbook_on_task_start',
+            'event_data' => { 'task_uuid' => task_uuid },
+            'stdout' => '',
+            'uuid' => 'handler-heading-uuid',
+            'created' => created
+          })
+          runner.send(:handle_host_event, hostname, {
+            'event' => 'runner_on_ok',
+            'event_data' => { 'host' => hostname, 'task_uuid' => task_uuid },
+            'stdout' => "#{task_heading}\r\nok: [#{hostname}]",
+            'uuid' => 'handler-result-host-a',
+            'created' => created
+          })
+          runner.send(:handle_host_event, second_hostname, {
+            'event' => 'runner_on_ok',
+            'event_data' => { 'host' => second_hostname, 'task_uuid' => task_uuid },
+            'stdout' => "ok: [#{second_hostname}]",
+            'uuid' => 'handler-result-host-b',
+            'created' => created
+          })
+
+          assert_equal [
+            [hostname, "#{task_heading}\r\nok: [#{hostname}]\n"],
+            [second_hostname, "#{task_heading}\n"],
+            [second_hostname, "ok: [#{second_hostname}]\n"]
+          ], published
+        end
       end
 
       describe '#rebuild_secrets' do
