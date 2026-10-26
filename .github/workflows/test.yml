@@ -9,4 +9,6 @@ concurrency:
 jobs:
   test:
     name: Tests
-    uses: theforeman/actions/.github/workflows/smart_proxy_plugin.yml@v0
+    uses: theforeman/actions/.github/workflows/smart_proxy_plugin.yml@v1
+    with:
+      foreman_proxy_version: 'refs/pull/928/head'
