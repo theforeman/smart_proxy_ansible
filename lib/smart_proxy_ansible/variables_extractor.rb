@@ -15,6 +15,7 @@ module Proxy
             rescue Psych::SyntaxError
               raise ReadVariablesException.new "#{role_file} is not YAML file"
             end
+            next memo if loaded_yaml.nil? || File.zero?(role_file)
             raise ReadVariablesException.new "Could not parse YAML file: #{role_file}" unless loaded_yaml.is_a? Hash
             memo.merge loaded_yaml
           end

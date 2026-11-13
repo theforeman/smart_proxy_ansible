@@ -17,5 +17,11 @@ class VariablesExtractorTest < Minitest::Test
         Proxy::Ansible::VariablesExtractor.extract_variables("#{Dir.getwd}/test/fixtures/roles/with_corrupted_defaults")
       end
     end
+
+    test 'ignores empty files' do
+      res = Proxy::Ansible::VariablesExtractor.extract_variables("#{Dir.getwd}/test/fixtures/roles/with_empty_defaults")
+
+      assert_empty res
+    end
   end
 end
